@@ -27,10 +27,9 @@
         
         .image-container {
             position: absolute;
-            width: 200px;
+            width: auto;
             height: 200px;
             background-color: #ddd;
-            border: 2px dashed #999;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -40,7 +39,6 @@
             user-select: none;
         }
         
-        /* Draggable mode styles */
         .draggable-mode .image-container {
             cursor: move;
         }
@@ -50,9 +48,7 @@
             opacity: 0.8;
         }
         
-        /* Trail mode styles */
         .trail-mode .image-container {
-            border: 2px solid #999;
             cursor: pointer;
             transition: transform 0.3s ease;
             transform-origin: center;
@@ -60,19 +56,21 @@
         
         .trail-mode .image-container.enlarged {
             transform: scale(2);
-            z-index: 10000;
+            z-index: 50;
             transition: transform 0.3s ease;
         }
         
         .image-container img {
-            width: 100%;
+            width: auto;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain;
             display: none;
         }
         
         .image-container.has-image img {
-            display: block;
+            display: block !important;
+            position: relative;
+            z-index: 1;
         }
         
         .image-container.has-image::before {
@@ -81,10 +79,12 @@
         
         .image-container::before {
             content: 'Drag image here';
+            position: absolute;
         }
-        
-        .trail-mode .image-container::before {
-            content: '';
+
+        .image-container.has-image::before {
+            content: '' !important;
+            display: none !important;
         }
         
         .menu {
@@ -141,7 +141,7 @@
             color: #e91e63;
         }
         
-        .header {
+        .header { /*AQUI PARA ABAJO DE CONTROLA EL TAMAÑO DE LA PAGINA */
             margin-top: 400px;
             margin-bottom: 30px;
             position: relative;
@@ -193,48 +193,53 @@
             color: #999;
             font-size: 14px;
         }
+
+        .draggable-mode .image-container.has-image img {
+            display: block !important;
+        }
     </style>
 </head>
 <body>
     <div class="menu">
         <div class="menu-dot" onclick="window.location.href='index.html'"></div>
         <div class="menu-dot" onclick="window.location.href='about.html'"></div>
-        <div class="menu-dot" onclick="window.location.href='template.html'"></div>
+        <div class="menu-dot" onclick="window.location.href='template3.html'"></div>
         <div class="dropdown-menu">
             <div class="menu-item" onclick="window.location.href='index.html'">START</div>
             <div class="menu-item" onclick="window.location.href='about.html'">ABOUT</div>
-            <div class="menu-item" onclick="window.location.href='template.html'">EXTRA</div>
+            <div class="menu-item" onclick="window.location.href='template3.html'">EXTRA</div>
         </div>
     </div>
     
     <div class="header">
-        <div class="year-line">// 2024</div>
-        <div class="subtitle">// Instalación interactiva</div>
+        <div class="year-line">// 2024</div> <!--- AQUI VA EL AÑO-->
+        <div class="subtitle">// Instalación interactiva</div> <!--- AQUI VA LA CATEGORIA-->
         
-        <div class="authors"># Tatiana Hernández, Carolina Rodriguez</div>
+        <div class="authors"># Tatiana Hernández, Carolina Rodriguez</div> <!--- AQUI VAN LOS AUTORES-->
         
         <h1>
-            <span class="title-rare">Pulsaciones raras</span>
+            <span class="title-rare">Pulsaciones raras</span> <!--- AQUI VA EL TITULO-->
         </h1>
         
-        <p class="description">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        <p class="description"> <!--- AQUI VA LA DESCRIPCION DEL PROYECTO-->
+            dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
         </p>
         
-        <div class="links-header"># links</div>
+        <div class="links-header"># links</div> <!--- AQUI VAN LOS LINKS-->
     </div>
     
     <script>
+
         const MODE = Math.floor(Math.random() * 2);
         
-        const imageSources = [
-            'https://via.placeholder.com/200/FF6B6B/FFFFFF?text=Image+1',
-            'https://via.placeholder.com/200/4ECDC4/FFFFFF?text=Image+2',
-            'https://via.placeholder.com/200/45B7D1/FFFFFF?text=Image+3',
-            'https://via.placeholder.com/200/FFA07A/FFFFFF?text=Image+4',
-            'https://via.placeholder.com/200/98D8C8/FFFFFF?text=Image+5'
+        const imageSources = [ //AQUI VAN LOS LINKS DE LAS IMAGENES
+            'https://hips.hearstapps.com/hmg-prod/images/dog-puppy-on-garden-royalty-free-image-1586966191.jpg?crop=0.752xw:1.00xh;0.175xw,0&resize=1200:*',
+            'https://supertails.com/cdn/shop/articles/1c3a0644-1ffb-4641-b2ea-5483b4ada874_520x500_a001116b-8f20-4bef-8b4c-2a57a1882223.webp?v=1734423067',
+            'https://www.akc.org/wp-content/uploads/2018/05/Three-Australian-Shepherd-puppies-sitting-in-a-field.jpg',
+            'https://d2zp5xs5cp8zlg.cloudfront.net/image-68121-800.jpg',
+            'https://hips.hearstapps.com/hmg-prod/images/labrador-retriever-canis-familiaris-five-yellow-puppies-at-news-photo-1579806100.jpg?crop=1xw:0.84387xh;center,top&resize=1200:*'
         ];
-        
+
         if (MODE === 1) {
             document.body.classList.add('trail-mode');
             initTrailMode();
@@ -243,7 +248,9 @@
             initDraggableMode();
         }
         
-        // Modo Arrastrar
+
+        // Modo arrastre
+
         function initDraggableMode() {
             const positions = [
                 { top: '50px', left: '100px' },
@@ -253,16 +260,18 @@
                 { top: '200px', right: '300px' }
             ];
             
+            
             positions.forEach((pos, index) => {
                 const container = document.createElement('div');
-                container.className = 'image-container';
+                container.className = 'image-container has-image';
                 container.setAttribute('draggable', 'false');
                 
                 const img = document.createElement('img');
-                img.src = '';
+                img.src = imageSources[index];
                 img.alt = `Image ${index + 1}`;
                 container.appendChild(img);
                 
+
                 Object.keys(pos).forEach(key => {
                     container.style[key] = pos[key];
                 });
@@ -282,6 +291,10 @@
             let yOffset = 0;
             let highestZIndex = 1;
             
+            const img = container.querySelector('img');  // ← First get the img
+            img.addEventListener('dragstart', (e) => e.preventDefault());  // ← THEN prevent its drag
+    
+
             container.addEventListener('mousedown', dragStart);
             document.addEventListener('mousemove', drag);
             document.addEventListener('mouseup', dragEnd);
@@ -299,6 +312,7 @@
                         const img = container.querySelector('img');
                         img.src = event.target.result;
                         container.classList.add('has-image');
+                        void container.offsetWidth;
                     };
                     reader.readAsDataURL(file);
                 }
@@ -339,7 +353,7 @@
             }
         }
         
-        // Modo Seguir
+        //Modo seguir
         function initTrailMode() {
             let currentImageIndex = 0;
             let imageElements = [];
