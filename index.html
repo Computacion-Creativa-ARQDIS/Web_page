@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html lang="en">
+<link rel="stylesheet" href="https://use.typekit.net/ixt3dec.css">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ArqDis - Computación Creativa</title>
+    <style>
+        /* Reset default browser styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Main body styling with gradient background */
+        body {
+            font-family: cairo-play, sans-serif;
+            font-style: normal;
+            font-weight: 200;
+            background: linear-gradient(135deg, #ffffff 0%, #ffffff 100%);
+            min-height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Main title styling */
+        h1 {
+            color: rgb(0, 0, 0);
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.3);
+            z-index: 100;
+            position: relative;
+        }
+
+        /* Instruction text */
+        .instructions {
+            color: rgba(255, 255, 255, 0.9);
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+            z-index: 100;
+            position: relative;
+        }
+
+        /* Main container for the 3D carousel */
+        .carousel-container {
+            position: relative;
+            width: 100%;
+            max-width: 1200px;
+            height: 500px;
+            perspective: 5000px;
+            perspective-origin: 50% 50%;
+            cursor: grab;
+            overflow: visible;
+        }
+
+        /* When actively dragging, show grabbing cursor */
+        .carousel-container.dragging {
+            cursor: grabbing;
+        }
+
+        /* The rotating carousel that holds all cards */
+        .carousel-3d {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            left: 0;
+            top: 0;
+            transform-style: preserve-3d;
+        }
+
+        /* Center GIF element - positioned in 3D space */
+        .center-gif {
+            position: static;
+            width: 300px;
+            height: 300px;
+            border-radius: 500px;
+            overflow: hidden;
+            /*box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);*/
+            transform-style: preserve-3d;
+            /* FIX: Start hidden and only show after first animation frame */
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .center-gif.visible {
+            opacity: 1;
+        }
+
+        .center-gif img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 500px;
+        }
+
+        /* Individual menu card styling */
+        .menu-card {
+            position: fixed;
+            width: 300px;
+            height: 300px;
+            border-radius: 0px;
+            cursor: pointer;
+            transform-style: preserve-3d;
+            backface-visibility: visible;
+            transition: none;
+            margin-left: -150px;
+            margin-top: -150px;
+        }
+
+        /* Hide non-expanded cards when one is expanded */
+        .menu-card.hidden-for-expand {
+            opacity: 0 !important;
+            pointer-events: none;
+        }
+
+        /* Front face of the card */
+        .card-front {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: white;
+            border-radius: 0px;
+            overflow: hidden;
+            /*box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);*/
+            backface-visibility: hidden;
+            transform: rotateY(0deg);
+        }
+
+        /* Back face of the card */
+        .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: white;
+            border-radius: 0px;
+            overflow: hidden;
+            /*box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);*/
+            backface-visibility: hidden;
+            transform: rotateY(180deg);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* When card is expanded - COMPLETELY override all positioning */
+        /* 1. Simplify the Expanded class: Only handle centering and size. */
+        .menu-card.expanded {
+            position: fixed !important;
+            left: 50% !important;
+            top: 50% !important;
+            width: 600px !important;
+            height: 700px !important;
+            margin: 0 !important;
+            /* CRITICAL FIX: Only center the card. REMOVE the rotateY(180deg) here. */
+            transform: translate(-50%, -50%) !important;
+            z-index: 10001 !important;
+            opacity: 1 !important;
+            filter: none !important;
+            transition: all 0.6s cubic-bezier(0.4, 0.0, 0.2, 1) !important;
+            /* CRITICAL FIX: Use preserve-3d to allow the flip to work inside the card */
+            transform-style: preserve-3d !important;
+        }
+
+        /* 2. Add the Flip class: Only handle the 180-degree rotation. */
+        .menu-card.is-flipped {
+            /* CRITICAL FIX: Combine the centering with the rotation for the final flipped view */
+            transform: translate(-50%, -50%) rotateY(180deg) !important;
+            transform-style: preserve-3d !important;
+        }
+
+        /* Overlay when card is expanded */
+        .card-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 10000;
+            display: none;
+            backdrop-filter: blur(5px);
+            pointer-events: auto;
+            transition: all 0.6s ease;
+        }
+
+        .card-overlay.active {
+            display: block;
+        }
+
+        /* Hover effect on front face */
+        .card-front:hover {
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Image on front face */
+        .card-image {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Actual image styling */
+        .card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        /* Zoom effect on image when hovering card */
+        .card-front:hover .card-image img {
+            transform: scale(1.15);
+        }
+
+        /* Badge in the top-right corner */
+        .card-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 5px 12px;
+            border-radius: 0px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            color: #667eea;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+        }
+
+        /* Back face content container */
+        .card-back-content {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        /* Image on back face */
+        .card-back-image {
+            width: 100%;
+            height: 250px;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .card-back-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Scrollable text content area on back face */
+        .card-back-text {
+            flex: 1;
+            overflow-y: auto;
+            padding: 25px;
+            background: white;
+        }
+
+        /* Back face text styling */
+        .card-back-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .card-back-description {
+            font-size: 1rem;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        /* Custom scrollbar */
+        .card-back-text::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .card-back-text::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        .card-back-text::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 4px;
+        }
+
+        .card-back-text::-webkit-scrollbar-thumb:hover {
+            background: #5568d3;
+        }
+
+        /* Overlay when card is expanded */
+        /* FIX: Increased z-index to be above expanded card's parent but card itself breaks out */
+        .card-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 10000;
+            display: none;
+            backdrop-filter: blur(5px);
+            pointer-events: auto;
+        }
+
+        .card-overlay.active {
+            display: block;
+        }
+
+        /* Control buttons container */
+        .controls {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 100;
+        }
+
+        /* Control button styling */
+        .control-btn {
+            background: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            color: #667eea;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        /* Button hover effect */
+        .control-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Active button state */
+        .control-btn.active {
+            background: #667eea;
+            color: white;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .carousel-container {
+                height: 400px;
+            }
+
+            .menu-card {
+                width: 160px;
+                height: 160px;
+                margin-left: -80px;
+                margin-top: -80px;
+                transition: transform 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
+                margin-left: -100px;
+                margin-top: -100px;
+            }
+
+
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Computación Creativa</h1>
+    <!--<div class="instructions">Drag to rotate • Click a card to expand • Space to auto-rotate</div> -->
+
+    <div class="card-overlay" id="cardOverlay"></div>
+
+    <div class="carousel-container" id="carouselContainer">
+        <div class="carousel-3d" id="carousel3d">
+            <div class="center-gif" id="centerGif">
+                <img src="https://arqdis.uniandes.edu.co/wp-content/uploads/2023/03/computacioncreativa.gif"
+                    alt="Center Animation">
+            </div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button class="control-btn" id="autoRotateBtn">Auto-Rotate: OFF</button>
+        <button class="control-btn" id="reverseBtn">Reverse</button>
+        <button class="control-btn" id="transition0Btn">Collapse</button>
+        <button class="control-btn" id="transition1Btn">Launch</button>
+        <button class="control-btn" id="transition2Btn">Smooth</button>
+    </div>
+
+    <script>
+        const menuItems = [
+            {
+                title: "Jaime Paratoyo",
+                description: "Exquisite culinary creations",
+                image: "https://arqdis.uniandes.edu.co/wp-content/uploads/2021/01/jaime-patarroyo-500x500.png",
+                badge: "Popular",
+                detailText: `
+                    <h3>About Gourmet Dishes</h3>
+                    <p>Our gourmet dishes represent the pinnacle of culinary artistry. Each plate is carefully crafted by our master chefs who have trained in the finest kitchens around the world.</p>
+                    <p>We source only the freshest, locally-sourced ingredients to ensure every bite is an explosion of flavor. From farm to table, we maintain the highest standards of quality.</p>
+                    <p>Our menu changes seasonally to take advantage of peak ingredient availability. This means you'll always experience something new and exciting with each visit.</p>
+                    <p>Whether you're celebrating a special occasion or simply treating yourself, our gourmet selection promises an unforgettable dining experience.</p>
+                `
+            },
+            {
+                title: "Damian Barragán",
+                description: "Damian Barragán es artista y diseñador con pregrado en Ingeniería de Sistemas y Computación de Los Andes y maestría en Artes en Diseño de Interacción del Interaction Design Institute Ivrea (Italia). Profesor Titular de la Facultad de Arquitectura y Diseño y Decano de Facultad de Artes y Humanidades.",
+                image: "https://arqdis.uniandes.edu.co/wp-content/uploads/2021/01/hernando-barragan-500x500.jpg",
+                badge: "New",
+                detailText: `
+                    <h3>Premium Beverage Collection</h3>
+                    <p>Discover our carefully curated selection of premium beverages, ranging from artisanal cocktails to rare vintage wines.</p>
+                    <p>Our mixologists are constantly innovating, creating signature drinks that perfectly complement our food menu.</p>
+                `
+            },
+            {
+                title: "Jorge Bandera",
+                description: "Handcrafted desserts",
+                image: "https://arqdis.uniandes.edu.co/wp-content/uploads/2023/06/jorge-bandera-2024-500x500.jpg",
+                badge: "Chef's Pick",
+                detailText: `
+                    <h3>Artisan Desserts</h3>
+                    <p>Indulge in our exquisite dessert collection, where traditional techniques meet modern creativity.</p>
+                    <p>Each dessert is handcrafted by our pastry chefs.</p>
+                `
+            },
+            {
+                title: "Tatiana Hernandez",
+                description: "Morning favorites",
+                image: "https://pps.services.adobe.com/api/profile/2EF624BC64534BA80A495F8A@2a70277064534b6d495e6b.e/image/bdeedead-5fd6-4257-96bb-c2f154a10b88/230",
+                badge: "Morning",
+                detailText: `
+                    <h3>Start Your Day Right</h3>
+                    <p>Wake up to our incredible breakfast menu, featuring both classic comfort foods and innovative morning creations.</p>
+                `
+            },
+            {
+                title: "Paula Ojeda",
+                description: "Nutritious & delicious",
+                image: "https://media.licdn.com/dms/image/v2/D4D03AQGKpvprsO4Jxg/profile-displayphoto-scale_200_200/B4DZmyAkrCHwAY-/0/1759628163929?e=2147483647&v=beta&t=TqAEvcSjyj2m8j1sErvomIliJMcfcjAcuYAmfGCYjy4",
+                badge: "Healthy",
+                detailText: `
+                    <h3>Wellness Menu</h3>
+                    <p>Eating healthy doesn't mean sacrificing flavor. Our wellness menu proves that nutritious food can be absolutely delicious.</p>
+                `
+            },
+            {
+                title: "Conversa Con Jeremy Oury y Diana Medina",
+                description: "Ocean-fresh catches",
+                image: "https://arqdis.uniandes.edu.co/wp-content/uploads/2025/10/0-miniatura-conversa-con-jeremy-diana.jpg",
+                badge: "EVENTO",
+                detailText: `
+                    <h3>From Ocean to Table</h3>
+                    <p>Experience the finest seafood, delivered fresh daily from sustainable fisheries.</p>
+                `
+            },
+            {
+                title: "Italian Pasta",
+                description: "Authentic Italian cuisine",
+                image: "https://portfolio.juanguarin.com/assets/images/adad-982x848.png",
+                badge: "Classic",
+                detailText: `
+                    <h3>Authentic Italian Tradition</h3>
+                    <p>Transport yourself to Italy with our authentic pasta dishes.</p>
+                `
+            },
+            {
+                title: "BBQ & Grills",
+                description: "Smoky perfection",
+                image: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400&h=300&fit=crop",
+                badge: "Hot",
+                detailText: `
+                    <h3>Fire & Smoke</h3>
+                    <p>Experience the art of barbecue with our slow-smoked meats.</p>
+                `
+            },
+            {
+                title: "BBQ & Grills",
+                description: "Smoky perfection",
+                image: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400&h=300&fit=crop",
+                badge: "Hot",
+                detailText: `
+                    <h3>Fire & Smoke</h3>
+                    <p>Experience the art of barbecue with our slow-smoked meats.</p>
+                `
+            },
+            {
+                title: "BBQ & Grills",
+                description: "Smoky perfection",
+                image: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400&h=300&fit=crop",
+                badge: "Hot",
+                detailText: `
+                    <h3>Fire & Smoke</h3>
+                    <p>Experience the art of barbecue with our slow-smoked meats.</p>
+                `
+            },
+            {
+                title: "BBQ & Grills",
+                description: "Smoky perfection",
+                image: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400&h=300&fit=crop",
+                badge: "Hot",
+                detailText: `
+                    <h3>Fire & Smoke</h3>
+                    <p>Experience the art of barbecue with our slow-smoked meats.</p>
+                `
+            },
+            {
+                title: "BBQ & Grills",
+                description: "Smoky perfection",
+                image: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400&h=300&fit=crop",
+                badge: "Hot",
+                detailText: `
+                    <h3>Fire & Smoke</h3>
+                    <p>Experience the art of barbecue with our slow-smoked meats.</p>
+                `
+            },
+            {
+                title: "BBQ & Grills",
+                description: "Smoky perfection",
+                image: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400&h=300&fit=crop",
+                badge: "Hot",
+                detailText: `
+                    <h3>Fire & Smoke</h3>
+                    <p>Experience the art of barbecue with our slow-smoked meats.</p>
+                `
+            }
+
+        ];
+
+        const container = document.getElementById('carouselContainer');
+        const carousel = document.getElementById('carousel3d');
+        const centerGif = document.getElementById('centerGif');
+        const autoRotateBtn = document.getElementById('autoRotateBtn');
+        const reverseBtn = document.getElementById('reverseBtn');
+        const cardOverlay = document.getElementById('cardOverlay');
+
+        const transition0Btn = document.getElementById('transition0Btn');
+        const transition1Btn = document.getElementById('transition1Btn');
+        const transition2Btn = document.getElementById('transition2Btn');
+
+
+        //Generacion de movimiento aleatorio
+
+        let rotation = 0;
+        let targetRotation = 0;
+        let isDragging = false;
+        let hasDragged = false;
+        let startX = 0;
+        let currentX = 0;
+        let velocity = 0;
+        let autoRotate = true;
+        let autoRotateSpeed = 0.05;
+        let rotationDirection = 1;
+        let expandedCard = null;
+        let wasAutoRotating = false;
+
+        //Auto Rotacion
+        let lastInteractionTime = Date.now();
+        let autoSpinDelay = 3000;
+
+        //Estado de inclinacion de rueda
+        let carouselTiltX = 90;
+        let targetTiltX = 90;
+        let isTransitioned = false;
+
+        //Control de tamaño
+        let currentRadius = 400;
+        let targetRadius = 400;
+        let isFirstFrame = true;
+
+        // Tipo de transicion
+        let transitionType = Math.floor(Math.random() * 3);; // Will store which transition to use (0, 1, or 2)
+        let transitionProgress = 0; // Progress of the transition animation (0 to 1)
+        let isTransitioning = false; // Is a transition currently playing?
+
+        const config = { //Confugiracion de tadio en 3D
+            cardCount: menuItems.length,
+            minScale: 0.6, //Tamano minimo de las tarjetas en el fondo
+            maxScale: 1.0, //Tamano maximo de las tarjetas en el fondo
+            minOpacity: 0.4,
+            maxOpacity: 1.0,
+            dragSensitivity: 0.08, //Sensitividad de rot
+            dragDamping: 0.7, //Amortiguamiento de rot
+            interpolationSpeed: 0.15 //Vel de amortiguamiento
+        };
+
+        function createCards() {
+            menuItems.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = 'menu-card';
+                card.dataset.index = index;
+
+                const randomY = (Math.random() - 0.5) * 1000;
+                card.dataset.offsetY = randomY;
+
+                const randomAngle = (Math.random() - 0.5) * 15;
+                card.dataset.angleOffset = randomAngle;
+
+                const minScaleFactor = 0.25;
+                const maxScaleFactor = 1;
+                const randomScale = Math.random() * (maxScaleFactor - minScaleFactor) + minScaleFactor;
+                card.dataset.randomScale = randomScale; // Store the random scale factor
+
+                //LO QUE PASA DENTRO DE LA TARJETA. SE DEBE REMPLAZAZR
+                card.innerHTML = `  
+                    <div class="card-front">
+                        <div class="card-image">
+                            <img src="${item.image}" alt="${item.title}">
+                            <div class="card-badge">${item.badge}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="card-back">
+                        <div class="card-back-content">
+                            <div class="card-back-image">
+                                <img src="${item.image}" alt="${item.title}">
+                            </div>
+                            <div class="card-back-text">
+                                <div class="card-back-title">${item.title}</div>
+                                <div class="card-back-description">${item.detailText}</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                card.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    if (!expandedCard && !hasDragged && isTransitioned) {
+                        expandCard(card);
+                    }
+                });
+
+                carousel.appendChild(card);
+            });
+        }
+
+        function expandCard(card) {
+            if (!card) return;
+
+            const currentParent = card.parentElement;
+            if (currentParent !== document.body) {
+                card.dataset.originalParent = currentParent.id;
+                document.body.appendChild(card);
+            }
+
+
+            card.classList.add('expanded');
+            cardOverlay.classList.add('active');
+
+            expandedCard = card;
+            wasAutoRotating = autoRotate;
+            autoRotate = false;
+            velocity = 0;
+            updateAutoRotateButton();
+
+
+            // Hide all other cards
+            const allCards = carousel.querySelectorAll('.menu-card');
+            allCards.forEach(c => {
+                if (c !== card) {
+                    c.classList.add('hidden-for-expand');
+                }
+            });
+
+            card.classList.add('expanded');
+            cardOverlay.classList.add('active');
+
+            setTimeout(() => {
+                card.classList.add('is-flipped');
+            }, 50);
+        }
+
+        function collapseCard() {
+            if (!expandedCard) return;
+
+            // 1. Start the reverse animation
+            expandedCard.classList.remove('is-flipped');
+            expandedCard.classList.remove('expanded');
+            cardOverlay.classList.remove('active');
+
+            const cardToCollapse = expandedCard;
+            const originalParentId = cardToCollapse.dataset.originalParent;
+            const originalParent = document.getElementById(originalParentId);
+
+            // Show all other cards again (unchanged)
+            const allCards = carousel.querySelectorAll('.menu-card');
+            allCards.forEach(c => {
+                c.classList.remove('hidden-for-expand');
+            });
+
+            // 2. Wait for the transition to finish (0.6s + buffer)
+            setTimeout(() => {
+                if (originalParent) {
+                    // CRITICAL FIX: Clear the strong inline styles set during expansion
+                    cardToCollapse.style.position = ''; // Remove fixed
+                    cardToCollapse.style.left = '';     // Remove 50%
+                    cardToCollapse.style.top = '';      // Remove 50%
+                    cardToCollapse.style.width = '';    // Remove 600px
+                    cardToCollapse.style.height = '';   // Remove 700px
+                    cardToCollapse.style.margin = '';   // Remove 0
+
+                    // Re-insert card into the 3D context
+                    originalParent.appendChild(cardToCollapse);
+
+                    // Clearing `transform` is the most important step to allow 
+                    // `updateCarousel()` to take over the positioning in the next animation frame.
+                    cardToCollapse.style.transform = '';
+                    cardToCollapse.style.opacity = '';
+                    cardToCollapse.style.filter = '';
+                    cardToCollapse.style.zIndex = '';
+                }
+
+                if (wasAutoRotating) {
+                    autoRotate = true;
+                    updateAutoRotateButton();
+                }
+
+                // Reset global state
+                expandedCard = null;
+                wasAutoRotating = false;
+                lastInteractionTime = Date.now();
+
+            }, 6); // Delay slightly longer than the 0.6s transition
+
+            // Note: expandedCard is set to null inside the setTimeout callback now.
+        }
+
+        cardOverlay.addEventListener('click', collapseCard);
+
+        function updateCarousel() {
+            const cards = carousel.querySelectorAll('.menu-card');
+            const centerX = container.offsetWidth / 2;
+            const centerY = container.offsetHeight / 2;
+
+            carousel.style.transition = 'none';
+            carousel.style.transform = `rotateX(${carouselTiltX}deg)`;
+
+            centerGif.style.transform = `
+                translate3d(${centerX - 150}px, ${centerY - 150}px, 0px)
+                rotateX(${-carouselTiltX}deg)
+            `;
+            centerGif.style.zIndex = -1;
+
+            // FIX: Show center GIF after first positioning
+            if (isFirstFrame) {
+                setTimeout(() => {
+                    centerGif.classList.add('visible');
+                }, 50);
+                isFirstFrame = false;
+            }
+
+            cards.forEach((card, index) => {
+                if (card.classList.contains('expanded')) {
+                    return;
+                }
+
+                const randomScaleFactor = parseFloat(card.dataset.randomScale);
+
+                const angleOffset = parseFloat(card.dataset.angleOffset);
+                const angle = (360 / config.cardCount) * index + rotation + angleOffset;
+                const angleRad = (angle * Math.PI) / 180;
+
+                let x = Math.sin(angleRad) * currentRadius;
+                let z = Math.cos(angleRad) * currentRadius;
+                const offsetY = parseFloat(card.dataset.offsetY);
+
+
+                if (isTransitioning) {
+                    if (transitionType === 0) {
+                        // Transition 0: Collapse to center, HOLD, then expand
+                        // Phase 1 (0 to 0.3): Collapse to center
+                        // Phase 2 (0.3 to 0.7): Hold at center
+                        // Phase 3 (0.7 to 1): Expand to final position
+                        if (transitionProgress < 0.3) {
+                            // Collapsing phase - move towards center on X, Y, and Z
+                            const collapseAmount = 1 - (transitionProgress / 0.3);
+                            x *= collapseAmount;
+                            z *= collapseAmount;
+                            
+                            // Collapse Y axis towards center too
+                            const centerYOffset = parseFloat(card.dataset.offsetY);
+                            card.dataset.tempOffsetY = centerYOffset * collapseAmount;
+                        } else if (transitionProgress < 0.7) {
+                            // Hold phase - stay at center (x, y, and z remain near 0)
+                            x *= 0.05; // Very small to stay near center
+                            z *= 0.05;
+                            card.dataset.tempOffsetY = parseFloat(card.dataset.offsetY) * 0.05;
+                        } else {
+                            // Expanding phase - move to final position
+                            const expandAmount = (transitionProgress - 0.7) / 0.3;
+                            x *= expandAmount;
+                            z *= expandAmount;
+                            
+                            // Expand Y axis back to original position
+                            const centerYOffset = parseFloat(card.dataset.offsetY);
+                            card.dataset.tempOffsetY = centerYOffset * expandAmount;
+                        }
+                    } else if (transitionType === 1) {
+                        // Transition 1: Accelerate upward, launch off screen, return
+                        if (transitionProgress < 0.3) {
+                            // Acceleration phase (0 to 0.3) - spin faster and faster
+                            const accelAmount = transitionProgress / 0.3;
+                            const spinBoost = Math.pow(accelAmount, 2) * 20;
+                            targetRotation += spinBoost * rotationDirection;
+                        } else if (transitionProgress < 0.6) {
+                            // Launch phase (0.3 to 0.6) - cards fly up and away
+                            const launchAmount = (transitionProgress - 0.3) / 0.3;
+                            const launchHeight = Math.pow(launchAmount, 1.5) * -1500;
+                            const launchScale = 1 - (launchAmount * 0.8);
+
+                            card.style.position = 'absolute';
+                            card.style.left = '0';
+                            card.style.top = '0';
+                            card.style.transform = `
+                                translate3d(${centerX + x}px, ${centerY + offsetY + launchHeight}px, ${z}px)
+                                scale(${launchScale * randomScaleFactor})
+                                rotate(${launchAmount * 360}deg)
+                            `;
+                            card.style.opacity = 1 - launchAmount;
+                            // Calculate saturation early for this phase
+                            const zNormalized = (z + currentRadius) / (currentRadius * 2);
+                            const saturation = 40 + (60 * zNormalized);
+
+                            card.style.position = 'absolute';
+                            card.style.left = '0';
+                            card.style.top = '0';
+                            card.style.transform = `
+                                translate3d(${centerX + x}px, ${centerY + offsetY + launchHeight}px, ${z}px)
+                                scale(${launchScale * randomScaleFactor})
+                                rotate(${launchAmount * 360}deg)
+                            `;
+                            card.style.opacity = 1 - launchAmount;
+                            card.style.filter = `saturate(${saturation}%) blur(${launchAmount * 5}px)`;
+                            card.style.zIndex = Math.round(z + 100);
+                            return; // Skip normal positioning
+                        } else {
+                            // Return phase (0.6 to 1) - cards fall back into place
+                            const returnAmount = (transitionProgress - 0.6) / 0.4;
+                            const easeReturn = 1 - Math.pow(1 - returnAmount, 3); // Ease out cubic
+                            const fallHeight = (1 - easeReturn) * -800;
+
+                            card.style.opacity = easeReturn;
+
+                            // Scale cards back up as they return
+                            const returnScale = easeReturn;
+                            x *= returnScale;
+                            z *= returnScale;
+                        }
+                    }
+                    // Transition 2: Default smooth transition (no special modifications)
+                }
+
+                // Calculate depth-based effects
+                const zNormalized = (z + currentRadius) / (currentRadius * 2);
+                const scale = config.minScale + (config.maxScale - config.minScale) * zNormalized;
+                const opacity = config.minOpacity + (config.maxOpacity - config.minOpacity) * zNormalized;
+                const saturation = 40 + (60 * zNormalized);
+                
+                // Use temporary Y offset if in transition 0, otherwise use normal offsetY
+                const finalOffsetY = (isTransitioning && transitionType === 0 && card.dataset.tempOffsetY !== undefined) 
+                    ? parseFloat(card.dataset.tempOffsetY) 
+                    : offsetY;
+                
+                // Apply all transformations
+                card.style.position = 'absolute';
+                card.style.left = '0';
+                card.style.top = '0';
+                card.style.transform = `
+                    translate3d(${centerX + x}px, ${centerY + finalOffsetY}px, ${z}px)
+                    scale(${scale * randomScaleFactor})
+                `;
+
+                card.style.opacity = opacity;
+                card.style.filter = `saturate(${saturation}%)`;
+                card.style.zIndex = Math.round(z + 100);
+            });
+        }
+
+        function animate() {
+
+            if (isTransitioning) {
+                // Different speeds for different transitions
+                if (transitionType === 0) {
+                    transitionProgress += 0.005; // Slower for collapse (was 0.015)
+                } else if (transitionType === 1) {
+                    transitionProgress += 0.008; // Slower for launch (was 0.015)
+                } else {
+                    transitionProgress += 0.015; // Normal speed for smooth
+                }
+                
+                if (transitionProgress >= 1) {
+                    // Transition complete
+                    transitionProgress = 1;
+                    isTransitioning = false;
+                }
+            }
+            carouselTiltX += (targetTiltX - carouselTiltX) * 0.03;
+            currentRadius += (targetRadius - currentRadius) * 0.03;
+
+            const timeSinceInteraction = Date.now() - lastInteractionTime;
+            if (isTransitioned && !isDragging && !autoRotate && !expandedCard && timeSinceInteraction > autoSpinDelay && Math.abs(velocity) < 0.01) {
+                autoRotate = true;
+                updateAutoRotateButton();
+            }
+
+            if (autoRotate && !expandedCard) {
+                targetRotation += autoRotateSpeed * rotationDirection;
+            }
+            else if (!isDragging && Math.abs(velocity) > 0.01) {
+                targetRotation += velocity;
+                velocity *= 0.95;
+            }
+
+            rotation += (targetRotation - rotation) * config.interpolationSpeed;
+
+            updateCarousel();
+            requestAnimationFrame(animate);
+        }
+
+        container.addEventListener('mousedown', (e) => {
+            if (!isTransitioned) {
+                // Start the transition animation on first click
+                targetTiltX = 0;
+                targetRadius = 900;
+                isTransitioned = true;
+                isTransitioning = true; // Start transition
+                transitionProgress = 0; // Reset progress
+                lastInteractionTime = Date.now();
+                return;
+            }
+
+            if (expandedCard) return;
+
+            hasDragged = false;
+            isDragging = true;
+            startX = e.clientX;
+            currentX = e.clientX;
+            velocity = 0;
+            autoRotate = false;
+            lastInteractionTime = Date.now();
+            updateAutoRotateButton();
+            container.classList.add('dragging');
+        });
+
+        container.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+
+            currentX = e.clientX;
+            const deltaX = currentX - startX;
+
+            if (Math.abs(deltaX) > 5) {
+                hasDragged = true;
+            }
+
+            const rotationDelta = deltaX * config.dragSensitivity;
+            targetRotation += rotationDelta;
+            velocity = rotationDelta * config.dragDamping;
+            startX = currentX;
+        });
+
+        container.addEventListener('mouseup', () => {
+            isDragging = false;
+            lastInteractionTime = Date.now();
+            container.classList.remove('dragging');
+            setTimeout(() => hasDragged = false, 100);
+        });
+
+        container.addEventListener('mouseleave', () => {
+            if (isDragging) {
+                isDragging = false;
+                container.classList.remove('dragging');
+            }
+        });
+
+        container.addEventListener('touchstart', (e) => {
+            if (!isTransitioned) {
+                // Start the transition animation on first touch
+                targetTiltX = 0;
+                targetRadius = 900;
+                isTransitioned = true;
+                isTransitioning = true; // Start transition
+                transitionProgress = 0; // Reset progress
+                lastInteractionTime = Date.now();
+                return;
+            }
+
+            if (expandedCard) return;
+
+            hasDragged = false;
+            isDragging = true;
+            startX = e.touches[0].clientX;
+            currentX = e.touches[0].clientX;
+            velocity = 0;
+            autoRotate = false;
+            lastInteractionTime = Date.now();
+            updateAutoRotateButton();
+        });
+
+        container.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+            e.preventDefault();
+
+            currentX = e.touches[0].clientX;
+            const deltaX = currentX - startX;
+
+            if (Math.abs(deltaX) > 5) {
+                hasDragged = true;
+            }
+
+            const rotationDelta = deltaX * config.dragSensitivity;
+            targetRotation += rotationDelta;
+            velocity = rotationDelta * config.dragDamping;
+            startX = currentX;
+        });
+
+        container.addEventListener('touchend', () => {
+            isDragging = false;
+            lastInteractionTime = Date.now();
+            setTimeout(() => hasDragged = false, 100);
+        });
+
+        autoRotateBtn.addEventListener('click', () => {
+            autoRotate = !autoRotate;
+            velocity = 0;
+            lastInteractionTime = Date.now();
+            updateAutoRotateButton();
+        });
+
+        function updateAutoRotateButton() {
+            autoRotateBtn.textContent = `Auto-Rotate: ${autoRotate ? 'ON' : 'OFF'}`;
+            autoRotateBtn.classList.toggle('active', autoRotate);
+        }
+
+        reverseBtn.addEventListener('click', () => {
+            rotationDirection *= -1;
+        });
+
+        // Transition buttons
+        transition0Btn.addEventListener('click', () => {
+            if (!isTransitioning) {
+                transitionType = 0;
+                transitionProgress = 0;
+                isTransitioning = true;
+            }
+        });
+
+        transition1Btn.addEventListener('click', () => {
+            if (!isTransitioning) {
+                transitionType = 1;
+                transitionProgress = 0;
+                isTransitioning = true;
+            }
+        });
+
+        transition2Btn.addEventListener('click', () => {
+            if (!isTransitioning) {
+                transitionType = 2;
+                transitionProgress = 0;
+                isTransitioning = true;
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Escape' && expandedCard) {
+                collapseCard();
+                return;
+            }
+
+            if (expandedCard) return;
+
+            if (e.code === 'Space') {
+                e.preventDefault();
+                autoRotate = !autoRotate;
+                velocity = 0;
+                lastInteractionTime = Date.now();
+                updateAutoRotateButton();
+            }
+            else if (e.code === 'ArrowLeft') {
+                targetRotation -= 5;
+                autoRotate = false;
+                lastInteractionTime = Date.now();
+                updateAutoRotateButton();
+            }
+            else if (e.code === 'ArrowRight') {
+                targetRotation += 5;
+                autoRotate = false;
+                lastInteractionTime = Date.now();
+                updateAutoRotateButton();
+            }
+        });
+
+        createCards();
+
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                updateCarousel();
+                animate();
+            });
+        });
+
+        console.log('3D Floating carousel loaded!');
+    </script>
+</body>
+
+</html>
