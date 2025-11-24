@@ -579,34 +579,36 @@
             window.location.href = SPOTIFY_AUTH_URL;
         }
 
-        async function searchSpotifyTrack(query) {
-            if (!spotifyAccessToken) {
-                alert('Por favor, conecta tu cuenta de Spotify primero');
-                return [];
+       
+async function searchSpotifyTrack(query) {
+    if (!spotifyAccessToken) {
+        alert('Por favor, conecta tu cuenta de Spotify primero');
+        return [];
+    }
+
+    try {
+        const response = await fetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=track&limit=5`, {
+            headers: {
+                'Authorization': `Bearer ${spotifyAccessToken}`
             }
+        });
 
-            try {
-                    headers: {                const response = await fetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=track&limit=5`, {
-
-                        'Authorization': `Bearer ${spotifyAccessToken}`
-                    }
-                });
-
-                if (response.status === 401) {
-                    // Token expired
-                    spotifyAccessToken = null;
-                    isSpotifyAuthenticated = false;
-                    updateSpotifyButton();
-                    return [];
-                }
-
-                const data = await response.json();
-                return data.tracks.items;
-            } catch (error) {
-                console.error('Error searching tracks:', error);
-                return [];
-            }
+        if (response.status === 401) {
+            // Token expired
+            spotifyAccessToken = null;
+            isSpotifyAuthenticated = false;
+            updateSpotifyButton();
+            return [];
         }
+
+        const data = await response.json();
+        return data.tracks.items;
+    } catch (error) {
+        console.error('Error searching tracks:', error);
+        return [];
+    }
+}
+
 
         async function playTrackPreview(trackURI, previewUrl) {
             currentTrackURI = trackURI;
