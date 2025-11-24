@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pulsaciones raras</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            padding: 40px;
+            font-family: monospace;
+            position: relative;
+            min-height: 100vh;
+            cursor: crosshair;
+        }
+        
+        .trail-image {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background-color: #ddd;
+            border: 2px solid #999;
+            pointer-events: auto;
+            cursor: pointer;
+            transition: transform 0.3s ease, z-index 0s;
+            transform-origin: center;
+            z-index: 1;
+        }
+        
+        .trail-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        
+        .trail-image.enlarged {
+            transform: scale(2);
+            z-index: 10000;
+            transition: transform 0.3s ease;
+        }
+        
+        .menu {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 100;
+        }
+        
+        .menu-dot {
+            width: 15px;
+            height: 15px;
+            border: 2px solid #e91e63;
+            border-radius: 50%;
+            background-color: transparent;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .menu:hover .menu-dot {
+            background-color: #e91e63;
+        }
+        
+        .dropdown-menu {
+            position: absolute;
+            top: 40px;
+            right: 0;
+            background-color: white;
+            border: 2px solid #e91e63;
+            padding: 10px 0;
+            min-width: 120px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        
+        .menu:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .menu-item {
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #333;
+            transition: background-color 0.2s ease;
+        }
+        
+        .menu-item:hover {
+            background-color: #f0f0f0;
+            color: #e91e63;
+        }
+        
+        .header {
+            margin-top: 400px;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 100;
+            background-color: #f5f5f5;
+            padding: 20px 0;
+        }
+        
+        .year-line {
+            color: #333;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+        
+        .subtitle {
+            color: #333;
+            font-size: 16px;
+            margin-bottom: 30px;
+        }
+        
+        .authors {
+            color: #999;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        
+        h1 {
+            font-size: 72px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            line-height: 1;
+        }
+        
+        .title-rare {
+            color: #000;
+        }
+        
+        .title-i {
+            color: #e91e63;
+        }
+        
+        .description {
+            max-width: 900px;
+            line-height: 1.6;
+            font-size: 14px;
+            color: #000;
+            margin-bottom: 60px;
+        }
+        
+        .links-header {
+            color: #999;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="menu">
+        <div class="menu-dot" onclick="window.location.href='index.html'"></div>
+        <div class="menu-dot" onclick="window.location.href='about.html'"></div>
+        <div class="menu-dot" onclick="window.location.href='template.html'"></div>
+        <div class="dropdown-menu">
+            <div class="menu-item" onclick="window.location.href='index.html'">START</div>
+            <div class="menu-item" onclick="window.location.href='about.html'">ABOUT</div>
+            <div class="menu-item" onclick="window.location.href='template.html'">EXTRA</div>
+        </div>
+    </div>
+    
+    <div class="header">
+        <div class="year-line">// 2024</div>
+        <div class="subtitle">// Instalación interactiva</div>
+        
+        <div class="authors"># Tatiana Hernández, Carolina Rodriguez</div>
+        
+        <h1>
+            <span class="title-rare">Pulsac<span class="title-i">i</span>ones raras</span>
+        </h1>
+        
+        <p class="description">
+            dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
+        </p>
+        
+        <div class="links-header"># links</div>
+    </div>
+    
+    <script>
+        // Array of image sources (you can replace these with your actual image URLs)
+        const imageSources = [
+            'https://via.placeholder.com/200/FF6B6B/FFFFFF?text=Image+1',
+            'https://via.placeholder.com/200/4ECDC4/FFFFFF?text=Image+2',
+            'https://via.placeholder.com/200/45B7D1/FFFFFF?text=Image+3',
+            'https://via.placeholder.com/200/FFA07A/FFFFFF?text=Image+4',
+            'https://via.placeholder.com/200/98D8C8/FFFFFF?text=Image+5'
+        ];
+        
+        let currentImageIndex = 0;
+        let imageElements = [];
+        let lastMouseX = 0;
+        let lastMouseY = 0;
+        let mouseMoveDistance = 0;
+        let enlargedImage = null;
+        const DISTANCE_THRESHOLD = 100; // Distance in pixels before creating a new image
+        const MAX_IMAGES = 5;
+        const TRAIL_ZONE_HEIGHT = 400; // Only create images in upper 400px (above the header)
+        
+        // Track mouse movement
+        document.addEventListener('mousemove', (e) => {
+            // Don't create images if an image is enlarged
+            if (enlargedImage) return;
+            
+            // Only create images in the upper area (above the header)
+            if (e.clientY > TRAIL_ZONE_HEIGHT) {
+                mouseMoveDistance = 0; // Reset distance when leaving zone
+                return;
+            }
+            
+            const deltaX = e.clientX - lastMouseX;
+            const deltaY = e.clientY - lastMouseY;
+            const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+            
+            mouseMoveDistance += distance;
+            
+            // Create a new image when enough distance is covered
+            if (mouseMoveDistance >= DISTANCE_THRESHOLD) {
+                createTrailImage(e.clientX, e.clientY);
+                mouseMoveDistance = 0;
+            }
+            
+            lastMouseX = e.clientX;
+            lastMouseY = e.clientY;
+        });
+        
+        function createTrailImage(x, y) {
+            // Create image element
+            const img = document.createElement('div');
+            img.className = 'trail-image';
+            
+            const imgElement = document.createElement('img');
+            imgElement.src = imageSources[currentImageIndex];
+            img.appendChild(imgElement);
+            
+            // Position the image centered on mouse
+            img.style.left = (x - 100) + 'px';
+            img.style.top = (y - 100) + 'px';
+            
+            // Add click handler for enlarging
+            img.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (enlargedImage === img) {
+                    // Shrink back
+                    img.classList.remove('enlarged');
+                    enlargedImage = null;
+                    document.body.style.cursor = 'crosshair';
+                } else {
+                    // Enlarge this image
+                    if (enlargedImage) {
+                        enlargedImage.classList.remove('enlarged');
+                    }
+                    img.classList.add('enlarged');
+                    enlargedImage = img;
+                    document.body.style.cursor = 'pointer';
+                }
+            });
+            
+            document.body.appendChild(img);
+            imageElements.push(img);
+            
+            // Move to next image in loop
+            currentImageIndex = (currentImageIndex + 1) % imageSources.length;
+            
+            // Remove oldest image if we exceed MAX_IMAGES
+            if (imageElements.length > MAX_IMAGES) {
+                const oldestImage = imageElements.shift();
+                if (oldestImage === enlargedImage) {
+                    enlargedImage = null;
+                    document.body.style.cursor = 'crosshair';
+                }
+                oldestImage.remove();
+            }
+        }
+        
+        // Click anywhere else to close enlarged image
+        document.addEventListener('click', (e) => {
+            if (enlargedImage && !e.target.closest('.trail-image')) {
+                enlargedImage.classList.remove('enlarged');
+                enlargedImage = null;
+                document.body.style.cursor = 'crosshair';
+            }
+        });
+    </script>
+</body>
+</html>

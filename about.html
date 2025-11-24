@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="es">
+<link rel="stylesheet" href="https://use.typekit.net/ixt3dec.css">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sobre nosotros</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            font-family: cairo-play, sans-serif;
+            padding: 40px;
+            min-height: 100vh;
+        }
+        
+        .menu {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 100;
+        }
+        
+        .menu-dot {
+            width: 15px;
+            height: 15px;
+            border: 2px solid #e91e63;
+            border-radius: 50%;
+            background-color: transparent;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .menu:hover .menu-dot {
+            background-color: #e91e63;
+        }
+        
+        .dropdown-menu {
+            position: absolute;
+            top: 40px;
+            right: 0;
+            background-color: white;
+            border: 2px solid #e91e63;
+            padding: 10px 0;
+            min-width: 120px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        
+        .menu:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .menu-item {
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #333;
+            transition: background-color 0.2s ease;
+        }
+        
+        .menu-item:hover {
+            background-color: #f0f0f0;
+            color: #e91e63;
+        }
+        
+        h1 {
+            font-size: 48px;
+            margin-bottom: 40px;
+            font-weight: bold;
+        }
+        
+        .content-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            margin-bottom: 60px;
+        }
+        
+        .left-column {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+        
+        .right-column {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+        
+        .text-block {
+            font-size: 13px;
+            line-height: 1.6;
+            color: #333;
+            text-align: justify;
+        }
+        
+        .section-title {
+            font-size: 14px;
+            color: #999;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+        }
+        
+        .quote-box {
+            background-color: white;
+            padding: 20px;
+            border-left: 3px solid #e0e0e0;
+            margin: 40px 0;
+        }
+        
+        .quote-text {
+            font-size: 12px;
+            line-height: 1.6;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .quote-author {
+            font-size: 12px;
+            color: #999;
+            font-style: italic;
+        }
+        
+        .leaders-section {
+            margin-top: 40px;
+        }
+        
+        .leader-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .leader-card {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .leader-image {
+            width: 100%;
+            aspect-ratio: 1;
+            background-color: #555;
+        }
+        
+        .leader-name {
+            font-size: 13px;
+            color: #333;
+        }
+        
+        .info-box {
+            background-color: white;
+            padding: 15px;
+            font-size: 11px;
+            line-height: 1.5;
+            color: #333;
+            margin-top: 20px;
+        }
+        
+        .integrantes-section {
+            margin-top: 40px;
+        }
+        
+        .integrante-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .integrante-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .integrante-image {
+            width: 70px;
+            height: 70px;
+            background-color: #000;
+            flex-shrink: 0;
+        }
+        
+        .integrante-name {
+            font-size: 13px;
+            color: #e91e63;
+        }
+        
+        .lineas-section {
+            margin-top: 60px;
+        }
+        
+        .lineas-content {
+            background-color: white;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .lineas-text {
+            font-size: 11px;
+            line-height: 1.6;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="menu">
+        <div class="menu-dot" onclick="window.location.href='index.html'"></div>
+        <div class="menu-dot" onclick="window.location.href='about.html'"></div>
+        <div class="menu-dot" onclick="window.location.href='template.html'"></div>
+        <div class="dropdown-menu">
+            <div class="menu-item" onclick="window.location.href='index.html'">START</div>
+            <div class="menu-item" onclick="window.location.href='about.html'">ABOUT</div>
+            <div class="menu-item" onclick="window.location.href='template.html'">EXTRA</div>
+        </div>
+    </div>
+    
+    <div class="content-wrapper">
+        <h1>Sobre nosotros</h1>
+        
+        <div class="main-content">
+            <div class="left-column">
+                <div class="text-block">
+                    El semillero de computación creativa es un espacio de encuentro entre las disciplinas creativas y las tecnologías digitales. Este encuentro se da desde la exploración de aplicaciones alternativas de lo digital en espacios como el arte generativo la animación experimental el diseño paramétrico el diseño de visual web inteligencia artificial visión artificial y la interacción humano maquina por medio del desarrollo de proyectos concretos. Se trata de un espacio inherentemente interdisciplinar por lo que estudiantes de cualquier programa son bienvenidos y bienvenidas siempre que tengan un interés por explorar las posibilidades creativas de la computación.
+                </div>
+                
+                <div>
+                    <div class="section-title"># SEMILLERO</div>
+                    <div class="text-block">
+                        El semillero nació de una creciente demanda por parte de los estudiantes (particularmente del pregrado de diseño) por participar en proyectos que les permitan continuar explorando el alcance de la computación creativa y física. Esta demanda surge de los esfuerzos realizados en los últimos años desde el Departamento de Diseño por incentivar el uso de tecnologías digitales y el alfabetismo digital desde la programación y sus posibilidades para las prácticas del diseño.
+                    </div>
+                </div>
+                
+                <div class="text-block">
+                    Desde su creación en el segundo semestre de 2021 el semillero se ha consolidado como un espacio de exploración abierto a estudiantes y profesores de diferentes disciplinas y niveles interesados en explorar las posibilidades creativas de lo digital.
+                </div>
+                
+                <div class="quote-box">
+                    <div class="section-title"># "La tecnología no basta"</div>
+                    <div class="quote-text">
+                        Considero la tecnología como una herramienta que, por sí sola, no puede hacer nada.<br><br>
+                        Trata la tecnología como algo del que los miembros del equipo podrían aprender, comprender y explorar libremente.
+                    </div>
+                    <div class="quote-author">— Red Burns</div>
+                </div>
+                
+                <div class="leaders-section">
+                    <div class="section-title"># LÍDERES</div>
+                    <div class="leader-grid">
+                        <div class="leader-card">
+                            <div class="leader-image"></div>
+                            <div class="leader-name">Jorge Bandera</div>
+                        </div>
+                        <div class="leader-card">
+                            <div class="leader-image"></div>
+                            <div class="leader-name">Jaime Patarroyo</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="info-box">
+                    Abierto a: Estudiantes de pregrado y posgrado de cualquier programa de la Universidad de los Andes.<br><br>
+                    Reuniones: cada 15 días de 16:30 a 18:00h
+                </div>
+                
+                <div class="lineas-section">
+                    <div class="section-title"># LÍNEAS DE INVESTIGACIÓN</div>
+                    <div class="lineas-content">
+                        <div class="lineas-text">
+                            » Se espera crear un espacio de exploración y diálogo del futuro del diseño desde todas las posibilidades que nos abren las tecnologías digitales.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-column">
+                <div class="integrantes-section">
+                    <div class="section-title"># INTEGRANTES</div>
+                    <div class="integrante-list">
+                        <div class="integrante-item">
+                            <div class="integrante-image"></div>
+                            <div class="integrante-name">Daniel Galindo</div>
+                        </div>
+                        <div class="integrante-item">
+                            <div class="integrante-image"></div>
+                            <div class="integrante-name">Tatiana Hernández</div>
+                        </div>
+                        <div class="integrante-item">
+                            <div class="integrante-image"></div>
+                            <div class="integrante-name">Mia Jaramillo</div>
+                        </div>
+                        <div class="integrante-item">
+                            <div class="integrante-image"></div>
+                            <div class="integrante-name">Paula Ojeda</div>
+                        </div>
+                        <div class="integrante-item">
+                            <div class="integrante-image"></div>
+                            <div class="integrante-name">Carolina Rodríguez</div>
+                        </div>
+                        <div class="integrante-item">
+                            <div class="integrante-image"></div>
+                            <div class="integrante-name">Dylan Mateo Zambrano</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
