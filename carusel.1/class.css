@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 html, body{ background-color:#1a948d; }	
 
 body
@@ -129,3 +130,374 @@ a:hover
 		padding-top:50px;
 		
 	}
+=======
+ /* Reset default browser styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Main body styling with gradient background */
+        body {
+            font-family: cairo-play, sans-serif;
+            font-style: normal;
+            font-weight: 200;
+            background: linear-gradient(135deg, #ffffff 0%, #ffffff 100%);
+            min-height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Main title styling */
+        h1 {
+            color: rgb(0, 0, 0);
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.3);
+            z-index: 100;
+            position: relative;
+        }
+
+        /* Instruction text */
+        .instructions {
+            color: rgba(255, 255, 255, 0.9);
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+            z-index: 100;
+            position: relative;
+        }
+
+        /* Main container for the 3D carousel */
+        .carousel-container {
+            position: relative;
+            width: 100%;
+            max-width: 1200px;
+            height: 500px;
+            perspective: 5000px;
+            perspective-origin: 50% 50%;
+            cursor: grab;
+            overflow: visible;
+        }
+
+        /* When actively dragging, show grabbing cursor */
+        .carousel-container.dragging {
+            cursor: grabbing;
+        }
+
+        /* The rotating carousel that holds all cards */
+        .carousel-3d {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            left: 0;
+            top: 0;
+            transform-style: preserve-3d;
+        }
+
+        /* Center GIF element - positioned in 3D space */
+        .center-gif {
+            position: static;
+            width: 300px;
+            height: 300px;
+            border-radius: 500px;
+            overflow: hidden;
+            /*box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);*/
+            transform-style: preserve-3d;
+            /* FIX: Start hidden and only show after first animation frame */
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .center-gif.visible {
+            opacity: 1;
+        }
+
+        .center-gif img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 500px;
+        }
+
+        /* Individual menu card styling */
+        .menu-card {
+            position: fixed;
+            width: 300px;
+            height: 300px;
+            border-radius: 0px;
+            cursor: pointer;
+            transform-style: preserve-3d;
+            backface-visibility: visible;
+            transition: none;
+            margin-left: -150px;
+            margin-top: -150px;
+        }
+
+        /* Hide non-expanded cards when one is expanded */
+        .menu-card.hidden-for-expand {
+            opacity: 0 !important;
+            pointer-events: none;
+        }
+
+        /* Front face of the card */
+        .card-front {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: white;
+            border-radius: 0px;
+            overflow: hidden;
+            /*box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);*/
+            backface-visibility: hidden;
+            transform: rotateY(0deg);
+        }
+
+        /* Back face of the card */
+        .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: white;
+            border-radius: 0px;
+            overflow: hidden;
+            /*box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);*/
+            backface-visibility: hidden;
+            transform: rotateY(180deg);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* When card is expanded - COMPLETELY override all positioning */
+        /* 1. Simplify the Expanded class: Only handle centering and size. */
+        .menu-card.expanded {
+            position: fixed !important;
+            left: 50% !important;
+            top: 50% !important;
+            width: 600px !important;
+            height: 700px !important;
+            margin: 0 !important;
+            /* CRITICAL FIX: Only center the card. REMOVE the rotateY(180deg) here. */
+            transform: translate(-50%, -50%) !important;
+            z-index: 10001 !important;
+            opacity: 1 !important;
+            filter: none !important;
+            transition: all 0.6s cubic-bezier(0.4, 0.0, 0.2, 1) !important;
+            /* CRITICAL FIX: Use preserve-3d to allow the flip to work inside the card */
+            transform-style: preserve-3d !important;
+        }
+
+        /* 2. Add the Flip class: Only handle the 180-degree rotation. */
+        .menu-card.is-flipped {
+            /* CRITICAL FIX: Combine the centering with the rotation for the final flipped view */
+            transform: translate(-50%, -50%) rotateY(180deg) !important;
+            transform-style: preserve-3d !important;
+        }
+
+        /* Overlay when card is expanded */
+        .card-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 10000;
+            display: none;
+            backdrop-filter: blur(5px);
+            pointer-events: auto;
+            transition: all 0.6s ease;
+        }
+
+        .card-overlay.active {
+            display: block;
+        }
+
+        /* Hover effect on front face */
+        .card-front:hover {
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Image on front face */
+        .card-image {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Actual image styling */
+        .card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        /* Zoom effect on image when hovering card */
+        .card-front:hover .card-image img {
+            transform: scale(1.15);
+        }
+
+        /* Badge in the top-right corner */
+        .card-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 5px 12px;
+            border-radius: 0px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            color: #667eea;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+        }
+
+        /* Back face content container */
+        .card-back-content {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        /* Image on back face */
+        .card-back-image {
+            width: 100%;
+            height: 250px;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .card-back-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Scrollable text content area on back face */
+        .card-back-text {
+            flex: 1;
+            overflow-y: auto;
+            padding: 25px;
+            background: white;
+        }
+
+        /* Back face text styling */
+        .card-back-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .card-back-description {
+            font-size: 1rem;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        /* Custom scrollbar */
+        .card-back-text::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .card-back-text::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        .card-back-text::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 4px;
+        }
+
+        .card-back-text::-webkit-scrollbar-thumb:hover {
+            background: #5568d3;
+        }
+
+        /* Overlay when card is expanded */
+        /* FIX: Increased z-index to be above expanded card's parent but card itself breaks out */
+        .card-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 10000;
+            display: none;
+            backdrop-filter: blur(5px);
+            pointer-events: auto;
+        }
+
+        .card-overlay.active {
+            display: block;
+        }
+
+        /* Control buttons container */
+        .controls {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 100;
+        }
+
+        /* Control button styling */
+        .control-btn {
+            background: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            color: #667eea;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        /* Button hover effect */
+        .control-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Active button state */
+        .control-btn.active {
+            background: #667eea;
+            color: white;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .carousel-container {
+                height: 400px;
+            }
+
+            .menu-card {
+                width: 160px;
+                height: 160px;
+                margin-left: -80px;
+                margin-top: -80px;
+                transition: transform 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
+                margin-left: -100px;
+                margin-top: -100px;
+            }
+
+
+        }
+>>>>>>> Stashed changes
