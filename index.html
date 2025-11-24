@@ -28,6 +28,60 @@
             justify-content: center;
         }
 
+        .menu {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    gap: 10px;
+    z-index: 10002;
+}
+
+.menu-dot {
+    width: 15px;
+    height: 15px;
+    border: 2px solid #e91e63;
+    border-radius: 50%;
+    background-color: transparent;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.menu:hover .menu-dot {
+    background-color: #e91e63;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 40px;
+    right: 0;
+    background-color: white;
+    border: 2px solid #e91e63;
+    padding: 10px 0;
+    min-width: 120px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.menu:hover .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+}
+
+.menu-item {
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #333;
+    transition: background-color 0.2s ease;
+}
+
+.menu-item:hover {
+    background-color: #f0f0f0;
+    color: #e91e63;
+}
+
         /* Main title styling */
         h1 {
             color: rgb(0, 0, 0);
@@ -78,9 +132,9 @@
 
         /* Center GIF element - positioned in 3D space */
         .center-gif {
-            position: static;
-            width: 300px;
-            height: 300px;
+            position: fixed;
+            width: 500px;
+            height: 500px;
             border-radius: 500px;
             overflow: hidden;
             /*box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);*/
@@ -95,7 +149,7 @@
         }
 
         .center-gif img {
-            width: 100%;
+            width: 60%;
             height: 100%;
             object-fit: cover;
             border-radius: 500px;
@@ -383,7 +437,19 @@
     <h1>Semillero: Computación Creativa</h1>
     <!--<div class="instructions">Drag to rotate • Click a card to expand • Space to auto-rotate</div> -->
 
+<div class="menu">
+    <div class="menu-dot" onclick="window.location.href='index.html'"></div>
+    <div class="menu-dot" onclick="window.location.href='about.html'"></div>
+    <div class="menu-dot" onclick="window.location.href='extra.html'"></div>
+    <div class="dropdown-menu">
+        <div class="menu-item" onclick="window.location.href='index.html'">START</div>
+        <div class="menu-item" onclick="window.location.href='about.html'">ABOUT</div>
+        <div class="menu-item" onclick="window.location.href='extra.html'">EXTRA</div>
+    </div>
+</div>
+
     <div class="card-overlay" id="cardOverlay"></div>
+    
 
     <div class="carousel-container" id="carouselContainer">
         <div class="carousel-3d" id="carousel3d">
@@ -409,135 +475,91 @@
                 description: "Exquisite culinary creations",
                 image: "https://arqdis.uniandes.edu.co/wp-content/uploads/2021/01/jaime-patarroyo-500x500.png",
                 badge: "Popular",
-                detailText: `
-                    <h3>About Gourmet Dishes</h3>
-                    <p>Our gourmet dishes represent the pinnacle of culinary artistry. Each plate is carefully crafted by our master chefs who have trained in the finest kitchens around the world.</p>
-                    <p>We source only the freshest, locally-sourced ingredients to ensure every bite is an explosion of flavor. From farm to table, we maintain the highest standards of quality.</p>
-                    <p>Our menu changes seasonally to take advantage of peak ingredient availability. This means you'll always experience something new and exciting with each visit.</p>
-                    <p>Whether you're celebrating a special occasion or simply treating yourself, our gourmet selection promises an unforgettable dining experience.</p>
-                `
+                url: "https://arqdis.uniandes.edu.co/profesores/jaime-patarroyo/"
             },
             {
                 title: "Damian Barragán",
                 description: "Damian Barragán es artista y diseñador con pregrado en Ingeniería de Sistemas y Computación de Los Andes y maestría en Artes en Diseño de Interacción del Interaction Design Institute Ivrea (Italia). Profesor Titular de la Facultad de Arquitectura y Diseño y Decano de Facultad de Artes y Humanidades.",
                 image: "https://arqdis.uniandes.edu.co/wp-content/uploads/2021/01/hernando-barragan-500x500.jpg",
                 badge: "New",
-                detailText: `
-                    <h3>Premium Beverage Collection</h3>
-                    <p>Discover our carefully curated selection of premium beverages, ranging from artisanal cocktails to rare vintage wines.</p>
-                    <p>Our mixologists are constantly innovating, creating signature drinks that perfectly complement our food menu.</p>
-                `
+                url: "https://example.com/jaime"
             },
             {
                 title: "Jorge Bandera",
                 description: "Handcrafted desserts",
                 image: "https://arqdis.uniandes.edu.co/wp-content/uploads/2023/06/jorge-bandera-2024-500x500.jpg",
                 badge: "Chef's Pick",
-                detailText: `
-                    <h3>Artisan Desserts</h3>
-                    <p>Indulge in our exquisite dessert collection, where traditional techniques meet modern creativity.</p>
-                    <p>Each dessert is handcrafted by our pastry chefs.</p>
-                `
+                url: "https://example.com/jaime"
             },
             {
                 title: "Tatiana Hernandez",
                 description: "Morning favorites",
                 image: "https://pps.services.adobe.com/api/profile/2EF624BC64534BA80A495F8A@2a70277064534b6d495e6b.e/image/bdeedead-5fd6-4257-96bb-c2f154a10b88/230",
                 badge: "Morning",
-                detailText: `
-                    <h3>Start Your Day Right</h3>
-                    <p>Wake up to our incredible breakfast menu, featuring both classic comfort foods and innovative morning creations.</p>
-                `
+                url: "https://example.com/jaime"
             },
             {
                 title: "Paula Ojeda",
                 description: "Nutritious & delicious",
                 image: "https://media.licdn.com/dms/image/v2/D4D03AQGKpvprsO4Jxg/profile-displayphoto-scale_200_200/B4DZmyAkrCHwAY-/0/1759628163929?e=2147483647&v=beta&t=TqAEvcSjyj2m8j1sErvomIliJMcfcjAcuYAmfGCYjy4",
                 badge: "Healthy",
-                detailText: `
-                    <h3>Wellness Menu</h3>
-                    <p>Eating healthy doesn't mean sacrificing flavor. Our wellness menu proves that nutritious food can be absolutely delicious.</p>
-                `
+               url: "https://example.com/jaime"
             },
             {
                 title: "Conversa Con Jeremy Oury y Diana Medina",
                 description: "Ocean-fresh catches",
                 image: "https://arqdis.uniandes.edu.co/wp-content/uploads/2025/10/0-miniatura-conversa-con-jeremy-diana.jpg",
                 badge: "EVENTO",
-                detailText: `
-                    <h3>From Ocean to Table</h3>
-                    <p>Experience the finest seafood, delivered fresh daily from sustainable fisheries.</p>
-                `
+                url: "https://example.com/jaime"
             },
             {
                 title: "Italian Pasta",
                 description: "Authentic Italian cuisine",
                 image: "https://portfolio.juanguarin.com/assets/images/adad-982x848.png",
                 badge: "Classic",
-                detailText: `
-                    <h3>Authentic Italian Tradition</h3>
-                    <p>Transport yourself to Italy with our authentic pasta dishes.</p>
-                `
+                url: "https://example.com/jaime"
             },
             {
                 title: "BBQ & Grills",
                 description: "Smoky perfection",
                 image: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400&h=300&fit=crop",
                 badge: "Hot",
-                detailText: `
-                    <h3>Fire & Smoke</h3>
-                    <p>Experience the art of barbecue with our slow-smoked meats.</p>
-                `
+                url: "https://example.com/jaime"
             },
             {
                 title: "BBQ & Grills",
                 description: "Smoky perfection",
                 image: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400&h=300&fit=crop",
                 badge: "Hot",
-                detailText: `
-                    <h3>Fire & Smoke</h3>
-                    <p>Experience the art of barbecue with our slow-smoked meats.</p>
-                `
+                url: "https://example.com/jaime"
             },
             {
                 title: "BBQ & Grills",
                 description: "Smoky perfection",
                 image: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400&h=300&fit=crop",
                 badge: "Hot",
-                detailText: `
-                    <h3>Fire & Smoke</h3>
-                    <p>Experience the art of barbecue with our slow-smoked meats.</p>
-                `
+                url: "https://example.com/jaime"
             },
             {
                 title: "BBQ & Grills",
                 description: "Smoky perfection",
                 image: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400&h=300&fit=crop",
                 badge: "Hot",
-                detailText: `
-                    <h3>Fire & Smoke</h3>
-                    <p>Experience the art of barbecue with our slow-smoked meats.</p>
-                `
+                url: "https://example.com/jaime"
             },
             {
                 title: "BBQ & Grills",
                 description: "Smoky perfection",
                 image: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400&h=300&fit=crop",
                 badge: "Hot",
-                detailText: `
-                    <h3>Fire & Smoke</h3>
-                    <p>Experience the art of barbecue with our slow-smoked meats.</p>
-                `
+                url: "https://example.com/jaime"
             },
             {
                 title: "BBQ & Grills",
                 description: "Smoky perfection",
                 image: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400&h=300&fit=crop",
                 badge: "Hot",
-                detailText: `
-                    <h3>Fire & Smoke</h3>
-                    <p>Experience the art of barbecue with our slow-smoked meats.</p>
-                `
+                url: "https://example.com/jaime"
             }
 
         ];
@@ -640,8 +662,9 @@
 
                 card.addEventListener('click', function (e) {
                     e.stopPropagation();
-                    if (!expandedCard && !hasDragged && isTransitioned) {
-                        expandCard(card);
+                    if (!hasDragged && isTransitioned) {
+                        // Navigate to URL instead of expanding
+                        window.location.href = item.url;
                     }
                 });
 
