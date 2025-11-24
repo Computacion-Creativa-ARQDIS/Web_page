@@ -142,10 +142,45 @@
             /* FIX: Start hidden and only show after first animation frame */
             opacity: 0;
             transition: opacity 0.3s ease;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .center-gif.visible {
             opacity: 1;
+        }
+
+        #audioVisualizer {
+            display: block;
+            border-radius: 50%;
+            background: white;
+            position: relative;
+            z-index: 50;
+        }
+
+        #microphoneBtn {
+            position: absolute !important;
+            bottom: 20px !important;
+            left: 50% !important;
+            transform: translateX(-50%) !important;
+            padding: 10px 20px !important;
+            background: #667eea !important;
+            color: white !important;
+            border: none !important;
+            border-radius: 25px !important;
+            cursor: pointer !important;
+            z-index: 101 !important;
+            font-weight: bold !important;
+            font-size: 0.9rem !important;
+            transition: all 0.3s ease !important;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important;
+        }
+
+        #microphoneBtn:hover {
+            transform: translateX(-50%) translateY(-2px) !important;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4) !important;
         }
 
         .center-gif img {
@@ -452,8 +487,10 @@
     <div class="carousel-container" id="carouselContainer">
         <div class="carousel-3d" id="carousel3d">
             <div class="center-gif" id="centerGif">
-                <canvas id="audioVisualizer" width="300" height="300"></canvas>
-                <button id="microphoneBtn" style="position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); padding: 8px 15px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; z-index: 100; font-weight: bold;">Activar Micrófono</button>
+                <div style="position: relative; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
+                    <canvas id="audioVisualizer" width="300" height="300"></canvas>
+                    <button id="microphoneBtn">Activar Micrófono</button>
+                </div>
             </div>
         </div>
     </div>
@@ -541,7 +578,7 @@
 
         // Draw audio visualizer (converted from Processing code)
         function drawAudioVisualizer(canvas) {
-            if (!canvas || !isMicrophoneActive) {
+            if (!canvas || !isMicrophoneActive || !analyser) {
                 return;
             }
             
@@ -551,14 +588,10 @@
             const centerX = width / 2;
             const centerY = height / 2;
 
-            if (!analyser) {
-                return;
-            }
-
             analyser.getByteFrequencyData(dataArray);
             playbackPosition += 1;
 
-            // Clear canvas with slight fade (like Processing rect with alpha)
+            // Clear canvas with slight fade - fondo blanco como Processing
             ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
             ctx.fillRect(0, 0, width, height);
 
@@ -567,7 +600,7 @@
 
             // Phase 1: Early visualization (waveform rings)
             if (playbackPosition < 100) {
-                // First smoothed waveform
+                // First smoothed waveform - Morado
                 for (let i = 0; i < 360; i++) {
                     valSuave1[i] = valSuave1[i] + (dataArray[i % bufferLength] - valSuave1[i]) / 1;
                     const posY = (valSuave1[i] / 255) * (height / 3);
@@ -583,7 +616,7 @@
                     ctx.restore();
                 }
 
-                // Second smoothed waveform
+                // Second smoothed waveform - Rosa
                 for (let i = 0; i < 360; i++) {
                     valSuave2[i] = valSuave2[i] + (dataArray[i % bufferLength] - valSuave2[i]) / 8;
                     const posY = (valSuave2[i] / 255) * (height / 3);
