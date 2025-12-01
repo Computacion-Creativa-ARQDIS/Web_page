@@ -20,7 +20,7 @@
             font-style: normal;
             font-weight: 200;
             background: linear-gradient(135deg, #ffffff 0%, #ffffff 100%);
-            min-height: 100vh;
+            min-height: 50vh;
             overflow: hidden;
             display: flex;
             flex-direction: column;
@@ -84,19 +84,21 @@
 
         /* Main title styling */
         h1 {
+            width: 100%;
+            padding-left: 40px;
             color: rgb(0, 0, 0);
-            text-align: center;
+            text-align: left;
             margin-bottom: 20px;
             font-size: 2.5rem;
             text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.3);
-            z-index: 100;
-            position: relative;
+            z-index: 1000000;
+            position: static;
         }
 
         /* Instruction text */
         .instructions {
             color: rgba(255, 255, 255, 0.9);
-            text-align: center;
+            text-align: left;
             margin-bottom: 30px;
             font-size: 1.1rem;
             z-index: 100;
@@ -108,7 +110,7 @@
             position: relative;
             width: 100%;
             max-width: 1200px;
-            height: 500px;
+            height: 600px;
             perspective: 5000px;
             perspective-origin: 50% 50%;
             cursor: grab;
@@ -416,11 +418,14 @@
 
     <div class="carousel-container" id="carouselContainer">
         <div class="carousel-3d" id="carousel3d">
-            <div class="center-gif" id="centerGif">
-                <img src="https://arqdis.uniandes.edu.co/wp-content/uploads/2023/03/computacioncreativa.gif"
-                    alt="Center Animation">
-            </div>
+            <!-- GIF removed from here -->
         </div>
+    </div>
+
+    <!-- GIF now outside carousel, won't be affected by carousel rotation -->
+    <div class="center-gif" id="centerGif">
+        <img src="https://arqdis.uniandes.edu.co/wp-content/uploads/2023/03/computacioncreativa.gif"
+            alt="Center Animation">
     </div>
 
 
@@ -688,8 +693,7 @@
             carousel.style.transform = `rotateX(${carouselTiltX}deg)`;
 
             centerGif.style.transform = `
-                translate3d(${centerX - 150}px, ${centerY - 150}px, 0px)
-                rotateX(${-carouselTiltX}deg)
+                translate3d(${centerX - 500}px, ${centerY - 250}px, 0px)
             `;
             centerGif.style.zIndex = -1;
 
@@ -809,16 +813,21 @@
                 const saturation = 40 + (60 * zNormalized);
                 
                 // Use temporary Y offset if in transition 0, otherwise use normal offsetY
+                // Use temporary Y offset if in transition 0, otherwise use normal offsetY
                 const finalOffsetY = (isTransitioning && transitionType === 0 && card.dataset.tempOffsetY !== undefined) 
                     ? parseFloat(card.dataset.tempOffsetY) 
                     : offsetY;
-                
+
+                // FIXED: Clamp Y position to prevent cards from going above screen
+                const minY = 150; // Minimum distance from top of screen (adjust as needed)
+                const finalY = Math.max(minY, centerY + finalOffsetY);
+
                 // Apply all transformations
                 card.style.position = 'absolute';
                 card.style.left = '0';
                 card.style.top = '0';
                 card.style.transform = `
-                    translate3d(${centerX + x}px, ${centerY + finalOffsetY}px, ${z}px)
+                    translate3d(${centerX + x}px, ${finalY}px, ${z}px)
                     scale(${scale * randomScaleFactor})
                 `;
 
