@@ -890,6 +890,12 @@
                 isTransitioning = true; // Start transition
                 transitionProgress = 0; // Reset progress
                 lastInteractionTime = Date.now();
+                
+                // START AUDIO on first click
+                if (audioLoaded && miCancion && !miCancion.isPlaying()) {
+                    miCancion.play();
+                }
+                
                 return;
             }
 
@@ -936,16 +942,22 @@
         });
 
         container.addEventListener('touchstart', (e) => {
-            if (!isTransitioned) {
-                // Start the transition animation on first touch
-                targetTiltX = 0;
-                targetRadius = 900;
-                isTransitioned = true;
-                isTransitioning = true; // Start transition
-                transitionProgress = 0; // Reset progress
-                lastInteractionTime = Date.now();
-                return;
+           if (!isTransitioned) {
+            // Start the transition animation on first touch
+            targetTiltX = 0;
+            targetRadius = 900;
+            isTransitioned = true;
+            isTransitioning = true; // Start transition
+            transitionProgress = 0; // Reset progress
+            lastInteractionTime = Date.now();
+            
+            // START AUDIO on first touch
+            if (audioLoaded && miCancion && !miCancion.isPlaying()) {
+                miCancion.play();
             }
+            
+            return;
+        }
 
             if (expandedCard) return;
 
