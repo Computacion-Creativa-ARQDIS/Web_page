@@ -371,43 +371,6 @@
             display: block;
         }
 
-        /* Control buttons container */
-        .controls {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 15px;
-            z-index: 100;
-        }
-
-        /* Control button styling */
-        .control-btn {
-            background: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: bold;
-            color: #667eea;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-            transition: all 0.3s ease;
-        }
-
-        /* Button hover effect */
-        .control-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
-        }
-
-        /* Active button state */
-        .control-btn.active {
-            background: #667eea;
-            color: white;
-        }
-
         /* Responsive design */
         @media (max-width: 768px) {
             h1 {
@@ -442,7 +405,7 @@
     <div class="menu-dot" onclick="window.location.href='about.html'"></div>
     <div class="menu-dot" onclick="window.location.href='extra.html'"></div>
     <div class="dropdown-menu">
-        <div class="menu-item" onclick="window.location.href='index.html'">START</div>
+        <div class="menu-item" onclick="window.location.href='index.html'">HOME</div>
         <div class="menu-item" onclick="window.location.href='about.html'">ABOUT</div>
         <div class="menu-item" onclick="window.location.href='extra.html'">EXTRA</div>
     </div>
@@ -460,13 +423,6 @@
         </div>
     </div>
 
-    <div class="controls">
-        <button class="control-btn" id="autoRotateBtn">Auto-Rotate: OFF</button>
-        <button class="control-btn" id="reverseBtn">Reverse</button>
-        <button class="control-btn" id="transition0Btn">Collapse</button>
-        <button class="control-btn" id="transition1Btn">Launch</button>
-        <button class="control-btn" id="transition2Btn">Smooth</button>
-    </div>
 
     <script>
         const menuItems = [
@@ -533,13 +489,7 @@
         const container = document.getElementById('carouselContainer');
         const carousel = document.getElementById('carousel3d');
         const centerGif = document.getElementById('centerGif');
-        const autoRotateBtn = document.getElementById('autoRotateBtn');
-        const reverseBtn = document.getElementById('reverseBtn');
         const cardOverlay = document.getElementById('cardOverlay');
-
-        const transition0Btn = document.getElementById('transition0Btn');
-        const transition1Btn = document.getElementById('transition1Btn');
-        const transition2Btn = document.getElementById('transition2Btn');
 
 
         //Generacion de movimiento aleatorio
@@ -655,7 +605,6 @@
             wasAutoRotating = autoRotate;
             autoRotate = false;
             velocity = 0;
-            updateAutoRotateButton();
 
 
             // Hide all other cards
@@ -716,7 +665,6 @@
 
                 if (wasAutoRotating) {
                     autoRotate = true;
-                    updateAutoRotateButton();
                 }
 
                 // Reset global state
@@ -904,7 +852,6 @@
             const timeSinceInteraction = Date.now() - lastInteractionTime;
             if (isTransitioned && !isDragging && !autoRotate && !expandedCard && timeSinceInteraction > autoSpinDelay && Math.abs(velocity) < 0.01) {
                 autoRotate = true;
-                updateAutoRotateButton();
             }
 
             if (autoRotate && !expandedCard) {
@@ -942,7 +889,6 @@
             velocity = 0;
             autoRotate = false;
             lastInteractionTime = Date.now();
-            updateAutoRotateButton();
             container.classList.add('dragging');
         });
 
@@ -997,7 +943,6 @@
             velocity = 0;
             autoRotate = false;
             lastInteractionTime = Date.now();
-            updateAutoRotateButton();
         });
 
         container.addEventListener('touchmove', (e) => {
@@ -1023,47 +968,6 @@
             setTimeout(() => hasDragged = false, 100);
         });
 
-        autoRotateBtn.addEventListener('click', () => {
-            autoRotate = !autoRotate;
-            velocity = 0;
-            lastInteractionTime = Date.now();
-            updateAutoRotateButton();
-        });
-
-        function updateAutoRotateButton() {
-            autoRotateBtn.textContent = `Auto-Rotate: ${autoRotate ? 'ON' : 'OFF'}`;
-            autoRotateBtn.classList.toggle('active', autoRotate);
-        }
-
-        reverseBtn.addEventListener('click', () => {
-            rotationDirection *= -1;
-        });
-
-        // Transition buttons
-        transition0Btn.addEventListener('click', () => {
-            if (!isTransitioning) {
-                transitionType = 0;
-                transitionProgress = 0;
-                isTransitioning = true;
-            }
-        });
-
-        transition1Btn.addEventListener('click', () => {
-            if (!isTransitioning) {
-                transitionType = 1;
-                transitionProgress = 0;
-                isTransitioning = true;
-            }
-        });
-
-        transition2Btn.addEventListener('click', () => {
-            if (!isTransitioning) {
-                transitionType = 2;
-                transitionProgress = 0;
-                isTransitioning = true;
-            }
-        });
-
         document.addEventListener('keydown', (e) => {
             if (e.code === 'Escape' && expandedCard) {
                 collapseCard();
@@ -1077,19 +981,16 @@
                 autoRotate = !autoRotate;
                 velocity = 0;
                 lastInteractionTime = Date.now();
-                updateAutoRotateButton();
             }
             else if (e.code === 'ArrowLeft') {
                 targetRotation -= 5;
                 autoRotate = false;
                 lastInteractionTime = Date.now();
-                updateAutoRotateButton();
             }
             else if (e.code === 'ArrowRight') {
                 targetRotation += 5;
                 autoRotate = false;
                 lastInteractionTime = Date.now();
-                updateAutoRotateButton();
             }
         });
 
