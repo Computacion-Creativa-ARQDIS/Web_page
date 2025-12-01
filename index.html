@@ -1047,7 +1047,7 @@
                     p5Canvas = p.createCanvas(500, 500);
                     p5Canvas.parent('p5-container');
                     
-                    numMuestras = 360;
+                    numMuestras = 512;
                     valSuave1 = new Array(numMuestras).fill(0);
                     valSuave2 = new Array(numMuestras).fill(0);
                     
@@ -1083,6 +1083,12 @@
                         p.textAlign(p.CENTER, p.CENTER);
                         p.textSize(14);
                         p.text('Click to load audio', p.width/2, p.height/2);
+                        return;
+                    }
+
+                    // ADDED: Safety check
+                    if (!miOnda) {
+                        p.background(255);
                         return;
                     }
 
