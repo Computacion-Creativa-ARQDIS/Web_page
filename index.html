@@ -882,22 +882,26 @@
         }
 
         container.addEventListener('mousedown', (e) => {
-            if (!isTransitioned) {
-                // Start the transition animation on first click
-                targetTiltX = 0;
-                targetRadius = 900;
-                isTransitioned = true;
-                isTransitioning = true; // Start transition
-                transitionProgress = 0; // Reset progress
-                lastInteractionTime = Date.now();
-                
-                // START AUDIO on first click
+    if (!isTransitioned) {
+        // Start the transition animation on first click
+        targetTiltX = 0;
+        targetRadius = 900;
+        isTransitioned = true;
+        isTransitioning = true; // Start transition
+        transitionProgress = 0; // Reset progress
+        lastInteractionTime = Date.now();
+        
+        // START AUDIO on first click - FIXED
+        if (typeof p5 !== 'undefined' && typeof getAudioContext === 'function') {
+            getAudioContext().resume().then(() => {
                 if (audioLoaded && miCancion && !miCancion.isPlaying()) {
                     miCancion.play();
                 }
-                
-                return;
-            }
+            });
+        }
+        
+        return;
+    }
 
             if (expandedCard) return;
 
