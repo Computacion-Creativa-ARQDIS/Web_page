@@ -694,26 +694,11 @@
             carousel.style.transition = 'none';
             carousel.style.transform = `rotateX(${carouselTiltX}deg)`;
 
-            // FIXED: Center the visualizer using window dimensions
-            const windowCenterX = window.innerWidth / 2;
-            const windowCenterY = window.innerHeight / 2;
             // Use cached visualizer position
             centerGif.style.transform = `
-                translate3d(${visualizerX}px, ${visualizerY}px, 0px)
-            `;
+        translate3d(${visualizerX}px, ${visualizerY}px, 0px)
+    `;
             centerGif.style.zIndex = -1;
-            let visualizerX = 0;
-            let visualizerY = 0;
-
-            // Calculate visualizer position once on load
-            function calculateVisualizerPosition() {
-                visualizerX = (window.innerWidth / 2) - 250;
-                visualizerY = (window.innerHeight / 2) - 250;
-            }
-
-            // Call it on load and on resize
-            calculateVisualizerPosition();
-            window.addEventListener('resize', calculateVisualizerPosition);
 
             // FIX: Show center GIF after first positioning
             if (isFirstFrame) {
@@ -738,7 +723,7 @@
                 let z = Math.cos(angleRad) * currentRadius;
                 const offsetY = parseFloat(card.dataset.offsetY);
 
-
+                // ALL YOUR TRANSITION CODE HERE (the if isTransitioning block)
                 if (isTransitioning) {
                     if (transitionType === 0) {
                         // Transition 0: Collapse to center, HOLD, then expand
@@ -830,15 +815,12 @@
                 const opacity = config.minOpacity + (config.maxOpacity - config.minOpacity) * zNormalized;
                 const saturation = 40 + (60 * zNormalized);
 
-                // Use temporary Y offset if in transition 0, otherwise use normal offsetY
-                // Use temporary Y offset if in transition 0, otherwise use normal offsetY
                 const finalOffsetY = (isTransitioning && transitionType === 0 && card.dataset.tempOffsetY !== undefined)
                     ? parseFloat(card.dataset.tempOffsetY)
                     : offsetY;
 
-                // FIXED: Clamp Y position to prevent cards from going above screen
-                const minY = 150; // Minimum distance from top of screen
-                const maxY = window.innerHeight - 150; // Maximum distance from top (150px from bottom)
+                const minY = 150;
+                const maxY = window.innerHeight - 150;
                 const clampedY = Math.max(minY, Math.min(maxY, centerY + finalOffsetY));
 
                 // Apply all transformations
@@ -846,9 +828,9 @@
                 card.style.left = '0';
                 card.style.top = '0';
                 card.style.transform = `
-                    translate3d(${centerX + x}px, ${clampedY}px, ${z}px)
-                    scale(${scale * randomScaleFactor})
-                `;
+            translate3d(${centerX + x}px, ${clampedY}px, ${z}px)
+            scale(${scale * randomScaleFactor})
+            `;
                 card.style.opacity = opacity;
                 card.style.filter = `saturate(${saturation}%)`;
                 card.style.zIndex = Math.round(z + 100);
