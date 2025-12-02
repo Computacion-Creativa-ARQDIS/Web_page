@@ -700,7 +700,7 @@
             centerGif.style.transform = `
                 translate3d(${windowCenterX - 250}px, ${windowCenterY - 250}px, 0px)
             `;
-            centerGif.style.zIndex = -1;
+            centerGif.style.zIndex = 1000;
 
             // FIX: Show center GIF after first positioning
             if (isFirstFrame) {
