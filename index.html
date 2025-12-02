@@ -141,13 +141,18 @@
             position: fixed;
             width: 500px;
             height: 500px;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            /* Center it */
             border-radius: 500px;
             overflow: hidden;
             transform-style: preserve-3d;
             opacity: 0;
             transition: opacity 0.3s ease;
             pointer-events: auto;
-            /* Allow clicks for audio control */
+            z-index: -1;
+            /* Behind cards */
         }
 
         .center-gif.visible {
@@ -534,16 +539,7 @@
         let isTransitioning = false; // Is a transition currently playing?
 
         // ADD THIS SECTION HERE:
-        let visualizerX = 0;
-        let visualizerY = 0;
 
-        function calculateVisualizerPosition() {
-            visualizerX = (window.innerWidth / 2) - 250;
-            visualizerY = (window.innerHeight / 2) - 250;
-        }
-
-        calculateVisualizerPosition();
-        window.addEventListener('resize', calculateVisualizerPosition);
         // END OF NEW SECTION
 
         const config = { //Confugiracion de tadio en 3D
@@ -707,10 +703,6 @@
             carousel.style.transition = 'none';
             carousel.style.transform = `rotateX(${carouselTiltX}deg)`;
 
-            // Use cached visualizer position
-            centerGif.style.transform = `
-        translate3d(${visualizerX}px, ${visualizerY}px, 0px)
-    `;
             centerGif.style.zIndex = -1;
 
             // FIX: Show center GIF after first positioning
