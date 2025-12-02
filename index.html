@@ -33,58 +33,58 @@
         }
 
         .menu {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    display: flex;
-    gap: 10px;
-    z-index: 10002;
-}
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 10002;
+        }
 
-.menu-dot {
-    width: 15px;
-    height: 15px;
-    border: 2px solid #e91e63;
-    border-radius: 50%;
-    background-color: transparent;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
+        .menu-dot {
+            width: 15px;
+            height: 15px;
+            border: 2px solid #e91e63;
+            border-radius: 50%;
+            background-color: transparent;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
 
-.menu:hover .menu-dot {
-    background-color: #e91e63;
-}
+        .menu:hover .menu-dot {
+            background-color: #e91e63;
+        }
 
-.dropdown-menu {
-    position: absolute;
-    top: 40px;
-    right: 0;
-    background-color: white;
-    border: 2px solid #e91e63;
-    padding: 10px 0;
-    min-width: 120px;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
-}
+        .dropdown-menu {
+            position: absolute;
+            top: 40px;
+            right: 0;
+            background-color: white;
+            border: 2px solid #e91e63;
+            padding: 10px 0;
+            min-width: 120px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
 
-.menu:hover .dropdown-menu {
-    opacity: 1;
-    visibility: visible;
-}
+        .menu:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+        }
 
-.menu-item {
-    padding: 10px 20px;
-    cursor: pointer;
-    font-size: 14px;
-    color: #333;
-    transition: background-color 0.2s ease;
-}
+        .menu-item {
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #333;
+            transition: background-color 0.2s ease;
+        }
 
-.menu-item:hover {
-    background-color: #f0f0f0;
-    color: #e91e63;
-}
+        .menu-item:hover {
+            background-color: #f0f0f0;
+            color: #e91e63;
+        }
 
         /* Main title styling */
         h1 {
@@ -146,7 +146,8 @@
             transform-style: preserve-3d;
             opacity: 0;
             transition: opacity 0.3s ease;
-            pointer-events: auto; /* Allow clicks for audio control */
+            pointer-events: auto;
+            /* Allow clicks for audio control */
         }
 
         .center-gif.visible {
@@ -404,19 +405,19 @@
     <h1>Computación Creativa</h1>
     <!--<div class="instructions">Drag to rotate • Click a card to expand • Space to auto-rotate</div> -->
 
-<div class="menu">
-    <div class="menu-dot" onclick="window.location.href='index.html'"></div>
-    <div class="menu-dot" onclick="window.location.href='about.html'"></div>
-    <div class="menu-dot" onclick="window.location.href='extra.html'"></div>
-    <div class="dropdown-menu">
-        <div class="menu-item" onclick="window.location.href='index.html'">HOME</div>
-        <div class="menu-item" onclick="window.location.href='about.html'">ABOUT</div>
-        <div class="menu-item" onclick="window.location.href='extra.html'">EXTRA</div>
+    <div class="menu">
+        <div class="menu-dot" onclick="window.location.href='index.html'"></div>
+        <div class="menu-dot" onclick="window.location.href='about.html'"></div>
+        <div class="menu-dot" onclick="window.location.href='extra.html'"></div>
+        <div class="dropdown-menu">
+            <div class="menu-item" onclick="window.location.href='index.html'">HOME</div>
+            <div class="menu-item" onclick="window.location.href='about.html'">ABOUT</div>
+            <div class="menu-item" onclick="window.location.href='extra.html'">EXTRA</div>
+        </div>
     </div>
-</div>
 
     <div class="card-overlay" id="cardOverlay"></div>
-    
+
 
     <div class="carousel-container" id="carouselContainer">
         <div class="carousel-3d" id="carousel3d">
@@ -465,7 +466,7 @@
                 description: "Nutritious & delicious",
                 image: "https://media.licdn.com/dms/image/v2/D4D03AQGKpvprsO4Jxg/profile-displayphoto-scale_200_200/B4DZmyAkrCHwAY-/0/1759628163929?e=2147483647&v=beta&t=TqAEvcSjyj2m8j1sErvomIliJMcfcjAcuYAmfGCYjy4",
                 badge: "Healthy",
-               url: "Rituales-y-evoluciones.html"
+                url: "Rituales-y-evoluciones.html"
             },
             {
                 title: "Interacciones con cámara",
@@ -488,7 +489,7 @@
                 badge: "Hot",
                 url: "Iteracion-Pulsaciones-raras.html"
             },
-            
+
 
         ];
 
@@ -736,7 +737,7 @@
                             const collapseAmount = 1 - (transitionProgress / 0.3);
                             x *= collapseAmount;
                             z *= collapseAmount;
-                            
+
                             // Collapse Y axis towards center too
                             const centerYOffset = parseFloat(card.dataset.offsetY);
                             card.dataset.tempOffsetY = centerYOffset * collapseAmount;
@@ -750,7 +751,7 @@
                             const expandAmount = (transitionProgress - 0.7) / 0.3;
                             x *= expandAmount;
                             z *= expandAmount;
-                            
+
                             // Expand Y axis back to original position
                             const centerYOffset = parseFloat(card.dataset.offsetY);
                             card.dataset.tempOffsetY = centerYOffset * expandAmount;
@@ -815,11 +816,11 @@
                 const scale = config.minScale + (config.maxScale - config.minScale) * zNormalized;
                 const opacity = config.minOpacity + (config.maxOpacity - config.minOpacity) * zNormalized;
                 const saturation = 40 + (60 * zNormalized);
-                
+
                 // Use temporary Y offset if in transition 0, otherwise use normal offsetY
                 // Use temporary Y offset if in transition 0, otherwise use normal offsetY
-                const finalOffsetY = (isTransitioning && transitionType === 0 && card.dataset.tempOffsetY !== undefined) 
-                    ? parseFloat(card.dataset.tempOffsetY) 
+                const finalOffsetY = (isTransitioning && transitionType === 0 && card.dataset.tempOffsetY !== undefined)
+                    ? parseFloat(card.dataset.tempOffsetY)
                     : offsetY;
 
                 // FIXED: Clamp Y position to prevent cards from going above screen
@@ -852,7 +853,7 @@
                 } else {
                     transitionProgress += 0.015; // Normal speed for smooth
                 }
-                
+
                 if (transitionProgress >= 1) {
                     // Transition complete
                     transitionProgress = 1;
@@ -882,26 +883,20 @@
         }
 
         container.addEventListener('mousedown', (e) => {
-    if (!isTransitioned) {
-        // Start the transition animation on first click
-        targetTiltX = 0;
-        targetRadius = 900;
-        isTransitioned = true;
-        isTransitioning = true; // Start transition
-        transitionProgress = 0; // Reset progress
-        lastInteractionTime = Date.now();
-        
-        // START AUDIO on first click - FIXED
-        if (typeof p5 !== 'undefined' && typeof getAudioContext === 'function') {
-            getAudioContext().resume().then(() => {
-                if (audioLoaded && miCancion && !miCancion.isPlaying()) {
-                    miCancion.play();
-                }
-            });
-        }
-        
-        return;
-    }
+            if (!isTransitioned) {
+                // Start the transition animation on first click
+                targetTiltX = 0;
+                targetRadius = 900;
+                isTransitioned = true;
+                isTransitioning = true;
+                transitionProgress = 0;
+                lastInteractionTime = Date.now();
+
+                // Trigger audio to start
+                window.startAudioPlayback();
+
+                return;
+            }
 
             if (expandedCard) return;
 
@@ -946,22 +941,20 @@
         });
 
         container.addEventListener('touchstart', (e) => {
-           if (!isTransitioned) {
-            // Start the transition animation on first touch
-            targetTiltX = 0;
-            targetRadius = 900;
-            isTransitioned = true;
-            isTransitioning = true; // Start transition
-            transitionProgress = 0; // Reset progress
-            lastInteractionTime = Date.now();
-            
-            // START AUDIO on first touch
-            if (audioLoaded && miCancion && !miCancion.isPlaying()) {
-                miCancion.play();
+            if (!isTransitioned) {
+                // Start the transition animation on first touch
+                targetTiltX = 0;
+                targetRadius = 900;
+                isTransitioned = true;
+                isTransitioning = true;
+                transitionProgress = 0;
+                lastInteractionTime = Date.now();
+
+                // Trigger audio to start
+                window.startAudioPlayback();
+
+                return;
             }
-            
-            return;
-        }
 
             if (expandedCard) return;
 
@@ -1034,7 +1027,7 @@
 
         console.log('3D Floating carousel loaded!');
 
-                // Audio Visualizer Setup
+        // Audio Visualizer Setup
         let miCancion;
         let miAmplitud;
         let ampSuave = 0;
@@ -1044,39 +1037,45 @@
         let valSuave2;
         let audioLoaded = false;
         let p5Canvas;
+        let audioStarted = false;
+
+        // Global function that p5 can access
+        window.startAudioPlayback = function () {
+            audioStarted = true;
+        };
 
         function initAudioVisualizer() {
             const sketch = (p) => {
                 p.setup = () => {
                     p5Canvas = p.createCanvas(500, 500);
                     p5Canvas.parent('p5-container');
-                    
+
                     numMuestras = 512;
                     valSuave1 = new Array(numMuestras).fill(0);
                     valSuave2 = new Array(numMuestras).fill(0);
-                    
+
                     p.getAudioContext().suspend();
-                    
+
                     // Replace with your audio URL
                     miCancion = p.loadSound(
                         'cha.mp3',
                         () => {
                             console.log('Audio loaded. Duration:', miCancion.duration());
                             audioLoaded = true;
-                            
+
                             miAmplitud = new p5.Amplitude();
                             miAmplitud.setInput(miCancion);
-                            
+
                             miOnda = new p5.FFT(0.8, numMuestras);
                             miOnda.setInput(miCancion);
-                            
+
                             centerGif.classList.add('visible');
                         },
                         (err) => {
                             console.error('Error loading audio:', err);
                         }
                     );
-                    
+
                     p.background(255);
                 };
 
@@ -1086,11 +1085,20 @@
                         p.fill(0);
                         p.textAlign(p.CENTER, p.CENTER);
                         p.textSize(14);
-                        p.text('Click to load audio', p.width/2, p.height/2);
+                        p.text('Loading audio...', p.width / 2, p.height / 2);
                         return;
                     }
 
-                    // ADDED: Safety check
+                    // Start audio when user has clicked and audio is loaded
+                    if (audioStarted && !miCancion.isPlaying()) {
+                        p.userStartAudio().then(() => {
+                            miCancion.play();
+                            console.log('Audio started!');
+                        });
+                        audioStarted = false; // Only try once
+                    }
+
+                    // Safety check
                     if (!miOnda) {
                         p.background(255);
                         return;
@@ -1098,21 +1106,21 @@
 
                     let miVol = p.map(p.mouseY, p.height, 0, 0.0, 1.0);
                     miCancion.setVolume(miVol);
-                    
+
                     let waveform = miOnda.waveform();
                     let currentTime = miCancion.currentTime();
-                    
+
                     if (currentTime < 100) {
                         p.fill(255, 20);
                         p.noStroke();
                         p.rect(0, 0, p.width, p.height);
-                        
+
                         p.push();
-                        p.translate(p.width/2, p.height/2);
+                        p.translate(p.width / 2, p.height / 2);
                         for (let i = 0; i < numMuestras; i++) {
                             valSuave1[i] = valSuave1[i] + (waveform[i] - valSuave1[i]) / 1;
-                            let posY = p.map(valSuave1[i], -1.0, 1.0, 0, p.height/2);
-                            
+                            let posY = p.map(valSuave1[i], -1.0, 1.0, 0, p.height / 2);
+
                             p.push();
                             p.rotate(p.radians(i));
                             p.strokeWeight(2);
@@ -1121,13 +1129,13 @@
                             p.pop();
                         }
                         p.pop();
-                        
+
                         p.push();
-                        p.translate(p.width/2, p.height/2);
+                        p.translate(p.width / 2, p.height / 2);
                         for (let i = 0; i < numMuestras; i++) {
                             valSuave2[i] = valSuave2[i] + (waveform[i] - valSuave2[i]) / 8;
-                            let posY = p.map(valSuave2[i], -1.0, 1.0, 0, p.height/2);
-                            
+                            let posY = p.map(valSuave2[i], -1.0, 1.0, 0, p.height / 2);
+
                             p.push();
                             p.rotate(p.radians(i));
                             p.strokeWeight(3);
@@ -1137,19 +1145,19 @@
                         }
                         p.pop();
                     }
-                    
+
                     if (currentTime > 100) {
                         let vol = miAmplitud.getLevel();
                         ampSuave = ampSuave + (vol - ampSuave) / 24;
-                        
+
                         let tamano1 = p.map(vol, 0.0, 1.0, 0, p.height);
                         p.noFill();
                         p.stroke(200, 0, 100);
-                        p.ellipse(p.width/2, p.height/2, tamano1, tamano1);
-                        
+                        p.ellipse(p.width / 2, p.height / 2, tamano1, tamano1);
+
                         let tamano2 = p.map(ampSuave, 0.0, 1.0, 0, p.height);
                         p.stroke(100, 0, 200);
-                        p.ellipse(p.width/2, p.height/2, tamano2, tamano2);
+                        p.ellipse(p.width / 2, p.height / 2, tamano2, tamano2);
                     }
                 };
 
@@ -1158,7 +1166,7 @@
                         p.getAudioContext().resume();
                         return;
                     }
-                    
+
                     if (miCancion.isPlaying()) {
                         miCancion.pause();
                     } else {
