@@ -533,6 +533,19 @@
         let transitionProgress = 0; // Progress of the transition animation (0 to 1)
         let isTransitioning = false; // Is a transition currently playing?
 
+        // ADD THIS SECTION HERE:
+        let visualizerX = 0;
+        let visualizerY = 0;
+
+        function calculateVisualizerPosition() {
+            visualizerX = (window.innerWidth / 2) - 250;
+            visualizerY = (window.innerHeight / 2) - 250;
+        }
+
+        calculateVisualizerPosition();
+        window.addEventListener('resize', calculateVisualizerPosition);
+        // END OF NEW SECTION
+
         const config = { //Confugiracion de tadio en 3D
             cardCount: menuItems.length,
             minScale: 0.6, //Tamano minimo de las tarjetas en el fondo
