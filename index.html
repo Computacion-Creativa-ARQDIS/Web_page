@@ -697,10 +697,23 @@
             // FIXED: Center the visualizer using window dimensions
             const windowCenterX = window.innerWidth / 2;
             const windowCenterY = window.innerHeight / 2;
+            // Use cached visualizer position
             centerGif.style.transform = `
-                translate3d(${windowCenterX - 250}px, ${windowCenterY - 250}px, 0px)
+                translate3d(${visualizerX}px, ${visualizerY}px, 0px)
             `;
             centerGif.style.zIndex = -1;
+            let visualizerX = 0;
+            let visualizerY = 0;
+
+            // Calculate visualizer position once on load
+            function calculateVisualizerPosition() {
+                visualizerX = (window.innerWidth / 2) - 250;
+                visualizerY = (window.innerHeight / 2) - 250;
+            }
+
+            // Call it on load and on resize
+            calculateVisualizerPosition();
+            window.addEventListener('resize', calculateVisualizerPosition);
 
             // FIX: Show center GIF after first positioning
             if (isFirstFrame) {
