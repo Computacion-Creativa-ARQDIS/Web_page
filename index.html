@@ -1080,6 +1080,8 @@
                 };
 
                 p.draw = () => {
+                    p.push();
+                    p.translate(-p.width / 2, -p.height / 2);
                     if (!audioLoaded) {
                         p.background(255);
                         p.fill(0);
@@ -1159,6 +1161,7 @@
                         p.stroke(100, 0, 200);
                         p.ellipse(p.width / 2, p.height / 2, tamano2, tamano2);
                     }
+                    p.pop();
                 };
 
                 p.mouseReleased = () => {
