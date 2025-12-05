@@ -3,6 +3,10 @@
 <link rel="stylesheet" href="https://use.typekit.net/ixt3dec.css">
 
 <head>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/addons/p5.sound.min.js"></script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <<<<<<< HEAD
@@ -23,7 +27,7 @@
             font-style: normal;
             font-weight: 200;
             background: linear-gradient(135deg, #ffffff 0%, #ffffff 100%);
-            min-height: 100vh;
+            min-height: 50vh;
             overflow: hidden;
             display: flex;
             flex-direction: column;
@@ -32,74 +36,76 @@
         }
 
         .menu {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    display: flex;
-    gap: 10px;
-    z-index: 10002;
-}
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 10002;
+        }
 
-.menu-dot {
-    width: 15px;
-    height: 15px;
-    border: 2px solid #e91e63;
-    border-radius: 50%;
-    background-color: transparent;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
+        .menu-dot {
+            width: 15px;
+            height: 15px;
+            border: 2px solid #e91e63;
+            border-radius: 50%;
+            background-color: transparent;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
 
-.menu:hover .menu-dot {
-    background-color: #e91e63;
-}
+        .menu:hover .menu-dot {
+            background-color: #e91e63;
+        }
 
-.dropdown-menu {
-    position: absolute;
-    top: 40px;
-    right: 0;
-    background-color: white;
-    border: 2px solid #e91e63;
-    padding: 10px 0;
-    min-width: 120px;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
-}
+        .dropdown-menu {
+            position: absolute;
+            top: 40px;
+            right: 0;
+            background-color: white;
+            border: 2px solid #e91e63;
+            padding: 10px 0;
+            min-width: 120px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
 
-.menu:hover .dropdown-menu {
-    opacity: 1;
-    visibility: visible;
-}
+        .menu:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+        }
 
-.menu-item {
-    padding: 10px 20px;
-    cursor: pointer;
-    font-size: 14px;
-    color: #333;
-    transition: background-color 0.2s ease;
-}
+        .menu-item {
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #333;
+            transition: background-color 0.2s ease;
+        }
 
-.menu-item:hover {
-    background-color: #f0f0f0;
-    color: #e91e63;
-}
+        .menu-item:hover {
+            background-color: #f0f0f0;
+            color: #e91e63;
+        }
 
         /* Main title styling */
         h1 {
+            width: 100%;
+            padding-left: 40px;
             color: rgb(0, 0, 0);
-            text-align: center;
+            text-align: left;
             margin-bottom: 20px;
             font-size: 2.5rem;
             text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.3);
-            z-index: 100;
-            position: relative;
+            z-index: 1000000;
+            position: static;
         }
 
         /* Instruction text */
         .instructions {
             color: rgba(255, 255, 255, 0.9);
-            text-align: center;
+            text-align: left;
             margin-bottom: 30px;
             font-size: 1.1rem;
             z-index: 100;
@@ -111,7 +117,7 @@
             position: relative;
             width: 100%;
             max-width: 1200px;
-            height: 500px;
+            height: 600px;
             perspective: 5000px;
             perspective-origin: 50% 50%;
             cursor: grab;
@@ -138,23 +144,27 @@
             position: fixed;
             width: 500px;
             height: 500px;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            /* Center it */
             border-radius: 500px;
             overflow: hidden;
-            /*box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);*/
             transform-style: preserve-3d;
-            /* FIX: Start hidden and only show after first animation frame */
             opacity: 0;
             transition: opacity 0.3s ease;
+            pointer-events: auto;
+            z-index: -1;
+            /* Behind cards */
         }
 
         .center-gif.visible {
             opacity: 1;
         }
 
-        .center-gif img {
-            width: 60%;
+        .center-gif canvas {
+            width: 100%;
             height: 100%;
-            object-fit: cover;
             border-radius: 500px;
         }
 
@@ -374,43 +384,6 @@
             display: block;
         }
 
-        /* Control buttons container */
-        .controls {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 15px;
-            z-index: 100;
-        }
-
-        /* Control button styling */
-        .control-btn {
-            background: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: bold;
-            color: #667eea;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-            transition: all 0.3s ease;
-        }
-
-        /* Button hover effect */
-        .control-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
-        }
-
-        /* Active button state */
-        .control-btn.active {
-            background: #667eea;
-            color: white;
-        }
-
         /* Responsive design */
         @media (max-width: 768px) {
             h1 {
@@ -440,50 +413,49 @@
     <h1>Computación Creativa</h1>
     <!--<div class="instructions">Drag to rotate • Click a card to expand • Space to auto-rotate</div> -->
 
-<div class="menu">
-    <div class="menu-dot" onclick="window.location.href='index.html'"></div>
-    <div class="menu-dot" onclick="window.location.href='about.html'"></div>
-    <div class="menu-dot" onclick="window.location.href='extra.html'"></div>
-    <div class="dropdown-menu">
-        <div class="menu-item" onclick="window.location.href='index.html'">START</div>
-        <div class="menu-item" onclick="window.location.href='about.html'">ABOUT</div>
-        <div class="menu-item" onclick="window.location.href='extra.html'">EXTRA</div>
-    </div>
-</div>
-
-    <div class="card-overlay" id="cardOverlay"></div>
-    
-
-    <div class="carousel-container" id="carouselContainer">
-        <div class="carousel-3d" id="carousel3d">
-            <div class="center-gif" id="centerGif">
-                <img src="https://arqdis.uniandes.edu.co/wp-content/uploads/2023/03/computacioncreativa.gif"
-                    alt="Center Animation">
-            </div>
+    <div class="menu">
+        <div class="menu-dot" onclick="window.location.href='index.html'"></div>
+        <div class="menu-dot" onclick="window.location.href='about.html'"></div>
+        <div class="menu-dot" onclick="window.location.href='extra.html'"></div>
+        <div class="dropdown-menu">
+            <div class="menu-item" onclick="window.location.href='index.html'">HOME</div>
+            <div class="menu-item" onclick="window.location.href='about.html'">ABOUT</div>
+            <div class="menu-item" onclick="window.location.href='extra.html'">EXTRA</div>
         </div>
     </div>
 
-    <div class="controls">
-        <button class="control-btn" id="autoRotateBtn">Auto-Rotate: OFF</button>
-        <button class="control-btn" id="reverseBtn">Reverse</button>
-        <button class="control-btn" id="transition0Btn">Collapse</button>
-        <button class="control-btn" id="transition1Btn">Launch</button>
-        <button class="control-btn" id="transition2Btn">Smooth</button>
+    <div class="card-overlay" id="cardOverlay"></div>
+
+
+    <div class="carousel-container" id="carouselContainer">
+        <div class="carousel-3d" id="carousel3d">
+            <!-- GIF removed from here -->
+        </div>
     </div>
+
+    <!-- GIF now outside carousel, won't be affected by carousel rotation -->
+    <div class="center-gif" id="centerGif">
+        <div id="p5-container"></div>
+    </div>
+
 
     <script>
         const menuItems = [
             {
                 title: "Pulsaciones raras",
                 description: "Exquisite culinary creations",
+<<<<<<< HEAD
                 image: "https://uniandes-my.sharepoint.com/:i:/r/personal/at_hernandez_uniandes_edu_co/Documents/imagenes%20semillero/Pulsaciones/6c49d8216475477.678050584462e.png?csf=1&web=1&e=KPe1TK",
+=======
+                image: "https://uniandes-my.sharepoint.com/personal/at_hernandez_uniandes_edu_co/_layouts/15/onedrive.aspx?viewid=35eed931%2Def74%2D4601%2D9ea6%2Dd2ad3d6af1cf&CT=1764618973481&OR=OWA%2DNT%2DMail&CID=5fbc3a2a%2D9259%2Dc4e4%2D0bcf%2D5e741d18f0af&e=5%3A0b7ad4ce70c74baea2aad7c5d15bc65d&sharingv2=true&fromShare=true&at=9&cidOR=Client&FolderCTID=0x01200028A22E3A52944A41B127E9D9314DB4B8&id=%2Fpersonal%2Fat%5Fhernandez%5Funiandes%5Fedu%5Fco%2FDocuments%2Fimagenes%20semillero%2FPulsaciones%2F056603216475477%2E6780517c4fbb6%2Ejpg&parent=%2Fpersonal%2Fat%5Fhernandez%5Funiandes%5Fedu%5Fco%2FDocuments%2Fimagenes%20semillero%2FPulsaciones/wp-content/uploads/2021/01/jaime-patarroyo-500x500.png",
+>>>>>>> main
                 badge: "Instalación interactiva",
                 url: "pulsaciones_raras.html"
             },
             {
                 title: "Portales - Augmented Windows",
                 description: "Damian Barragán es artista y diseñador con pregrado en Ingeniería de Sistemas y Computación de Los Andes y maestría en Artes en Diseño de Interacción del Interaction Design Institute Ivrea (Italia). Profesor Titular de la Facultad de Arquitectura y Diseño y Decano de Facultad de Artes y Humanidades.",
-                image: "https://arqdis.uniandes.edu.co/wp-content/uploads/2021/01/hernando-barragan-500x500.jpg",
+                image: "https://uniandes-my.sharepoint.com/:i:/r/personal/at_hernandez_uniandes_edu_co/Documents/imagenes%20semillero/dylan/262227225455853.681d2cd92045d.png?csf=1&web=1&e=ycfOSa",
                 badge: "New",
                 url: "Portales-AugmentedWindows.html"
             },
@@ -506,7 +478,7 @@
                 description: "Nutritious & delicious",
                 image: "https://media.licdn.com/dms/image/v2/D4D03AQGKpvprsO4Jxg/profile-displayphoto-scale_200_200/B4DZmyAkrCHwAY-/0/1759628163929?e=2147483647&v=beta&t=TqAEvcSjyj2m8j1sErvomIliJMcfcjAcuYAmfGCYjy4",
                 badge: "Healthy",
-               url: "Rituales-y-evoluciones.html"
+                url: "Rituales-y-evoluciones.html"
             },
             {
                 title: "Interacciones con cámara",
@@ -529,20 +501,14 @@
                 badge: "Hot",
                 url: "Iteracion-Pulsaciones-raras.html"
             },
-            
+
 
         ];
 
         const container = document.getElementById('carouselContainer');
         const carousel = document.getElementById('carousel3d');
         const centerGif = document.getElementById('centerGif');
-        const autoRotateBtn = document.getElementById('autoRotateBtn');
-        const reverseBtn = document.getElementById('reverseBtn');
         const cardOverlay = document.getElementById('cardOverlay');
-
-        const transition0Btn = document.getElementById('transition0Btn');
-        const transition1Btn = document.getElementById('transition1Btn');
-        const transition2Btn = document.getElementById('transition2Btn');
 
 
         //Generacion de movimiento aleatorio
@@ -578,6 +544,10 @@
         let transitionType = Math.floor(Math.random() * 3);; // Will store which transition to use (0, 1, or 2)
         let transitionProgress = 0; // Progress of the transition animation (0 to 1)
         let isTransitioning = false; // Is a transition currently playing?
+
+        // ADD THIS SECTION HERE:
+
+        // END OF NEW SECTION
 
         const config = { //Confugiracion de tadio en 3D
             cardCount: menuItems.length,
@@ -658,7 +628,6 @@
             wasAutoRotating = autoRotate;
             autoRotate = false;
             velocity = 0;
-            updateAutoRotateButton();
 
 
             // Hide all other cards
@@ -719,7 +688,6 @@
 
                 if (wasAutoRotating) {
                     autoRotate = true;
-                    updateAutoRotateButton();
                 }
 
                 // Reset global state
@@ -742,10 +710,6 @@
             carousel.style.transition = 'none';
             carousel.style.transform = `rotateX(${carouselTiltX}deg)`;
 
-            centerGif.style.transform = `
-                translate3d(${centerX - 150}px, ${centerY - 150}px, 0px)
-                rotateX(${-carouselTiltX}deg)
-            `;
             centerGif.style.zIndex = -1;
 
             // FIX: Show center GIF after first positioning
@@ -771,7 +735,7 @@
                 let z = Math.cos(angleRad) * currentRadius;
                 const offsetY = parseFloat(card.dataset.offsetY);
 
-
+                // ALL YOUR TRANSITION CODE HERE (the if isTransitioning block)
                 if (isTransitioning) {
                     if (transitionType === 0) {
                         // Transition 0: Collapse to center, HOLD, then expand
@@ -783,7 +747,7 @@
                             const collapseAmount = 1 - (transitionProgress / 0.3);
                             x *= collapseAmount;
                             z *= collapseAmount;
-                            
+
                             // Collapse Y axis towards center too
                             const centerYOffset = parseFloat(card.dataset.offsetY);
                             card.dataset.tempOffsetY = centerYOffset * collapseAmount;
@@ -797,7 +761,7 @@
                             const expandAmount = (transitionProgress - 0.7) / 0.3;
                             x *= expandAmount;
                             z *= expandAmount;
-                            
+
                             // Expand Y axis back to original position
                             const centerYOffset = parseFloat(card.dataset.offsetY);
                             card.dataset.tempOffsetY = centerYOffset * expandAmount;
@@ -862,21 +826,23 @@
                 const scale = config.minScale + (config.maxScale - config.minScale) * zNormalized;
                 const opacity = config.minOpacity + (config.maxOpacity - config.minOpacity) * zNormalized;
                 const saturation = 40 + (60 * zNormalized);
-                
-                // Use temporary Y offset if in transition 0, otherwise use normal offsetY
-                const finalOffsetY = (isTransitioning && transitionType === 0 && card.dataset.tempOffsetY !== undefined) 
-                    ? parseFloat(card.dataset.tempOffsetY) 
+
+                const finalOffsetY = (isTransitioning && transitionType === 0 && card.dataset.tempOffsetY !== undefined)
+                    ? parseFloat(card.dataset.tempOffsetY)
                     : offsetY;
-                
+
+                const minY = 150;
+                const maxY = window.innerHeight - 150;
+                const clampedY = Math.max(minY, Math.min(maxY, centerY + finalOffsetY));
+
                 // Apply all transformations
                 card.style.position = 'absolute';
                 card.style.left = '0';
                 card.style.top = '0';
                 card.style.transform = `
-                    translate3d(${centerX + x}px, ${centerY + finalOffsetY}px, ${z}px)
-                    scale(${scale * randomScaleFactor})
-                `;
-
+            translate3d(${centerX + x}px, ${clampedY}px, ${z}px)
+            scale(${scale * randomScaleFactor})
+            `;
                 card.style.opacity = opacity;
                 card.style.filter = `saturate(${saturation}%)`;
                 card.style.zIndex = Math.round(z + 100);
@@ -894,7 +860,7 @@
                 } else {
                     transitionProgress += 0.015; // Normal speed for smooth
                 }
-                
+
                 if (transitionProgress >= 1) {
                     // Transition complete
                     transitionProgress = 1;
@@ -907,7 +873,6 @@
             const timeSinceInteraction = Date.now() - lastInteractionTime;
             if (isTransitioned && !isDragging && !autoRotate && !expandedCard && timeSinceInteraction > autoSpinDelay && Math.abs(velocity) < 0.01) {
                 autoRotate = true;
-                updateAutoRotateButton();
             }
 
             if (autoRotate && !expandedCard) {
@@ -930,9 +895,13 @@
                 targetTiltX = 0;
                 targetRadius = 900;
                 isTransitioned = true;
-                isTransitioning = true; // Start transition
-                transitionProgress = 0; // Reset progress
+                isTransitioning = true;
+                transitionProgress = 0;
                 lastInteractionTime = Date.now();
+
+                // Trigger audio to start
+                window.startAudioPlayback();
+
                 return;
             }
 
@@ -945,7 +914,6 @@
             velocity = 0;
             autoRotate = false;
             lastInteractionTime = Date.now();
-            updateAutoRotateButton();
             container.classList.add('dragging');
         });
 
@@ -985,9 +953,13 @@
                 targetTiltX = 0;
                 targetRadius = 900;
                 isTransitioned = true;
-                isTransitioning = true; // Start transition
-                transitionProgress = 0; // Reset progress
+                isTransitioning = true;
+                transitionProgress = 0;
                 lastInteractionTime = Date.now();
+
+                // Trigger audio to start
+                window.startAudioPlayback();
+
                 return;
             }
 
@@ -1000,7 +972,6 @@
             velocity = 0;
             autoRotate = false;
             lastInteractionTime = Date.now();
-            updateAutoRotateButton();
         });
 
         container.addEventListener('touchmove', (e) => {
@@ -1026,47 +997,6 @@
             setTimeout(() => hasDragged = false, 100);
         });
 
-        autoRotateBtn.addEventListener('click', () => {
-            autoRotate = !autoRotate;
-            velocity = 0;
-            lastInteractionTime = Date.now();
-            updateAutoRotateButton();
-        });
-
-        function updateAutoRotateButton() {
-            autoRotateBtn.textContent = `Auto-Rotate: ${autoRotate ? 'ON' : 'OFF'}`;
-            autoRotateBtn.classList.toggle('active', autoRotate);
-        }
-
-        reverseBtn.addEventListener('click', () => {
-            rotationDirection *= -1;
-        });
-
-        // Transition buttons
-        transition0Btn.addEventListener('click', () => {
-            if (!isTransitioning) {
-                transitionType = 0;
-                transitionProgress = 0;
-                isTransitioning = true;
-            }
-        });
-
-        transition1Btn.addEventListener('click', () => {
-            if (!isTransitioning) {
-                transitionType = 1;
-                transitionProgress = 0;
-                isTransitioning = true;
-            }
-        });
-
-        transition2Btn.addEventListener('click', () => {
-            if (!isTransitioning) {
-                transitionType = 2;
-                transitionProgress = 0;
-                isTransitioning = true;
-            }
-        });
-
         document.addEventListener('keydown', (e) => {
             if (e.code === 'Escape' && expandedCard) {
                 collapseCard();
@@ -1080,19 +1010,16 @@
                 autoRotate = !autoRotate;
                 velocity = 0;
                 lastInteractionTime = Date.now();
-                updateAutoRotateButton();
             }
             else if (e.code === 'ArrowLeft') {
                 targetRotation -= 5;
                 autoRotate = false;
                 lastInteractionTime = Date.now();
-                updateAutoRotateButton();
             }
             else if (e.code === 'ArrowRight') {
                 targetRotation += 5;
                 autoRotate = false;
                 lastInteractionTime = Date.now();
-                updateAutoRotateButton();
             }
         });
 
@@ -1106,6 +1033,162 @@
         });
 
         console.log('3D Floating carousel loaded!');
+
+        // Audio Visualizer Setup
+        let miCancion;
+        let miAmplitud;
+        let ampSuave = 0;
+        let miOnda;
+        let numMuestras;
+        let valSuave1;
+        let valSuave2;
+        let audioLoaded = false;
+        let p5Canvas;
+        let audioStarted = false;
+
+        // Global function that p5 can access
+        window.startAudioPlayback = function () {
+            audioStarted = true;
+        };
+
+        function initAudioVisualizer() {
+            const sketch = (p) => {
+                p.setup = () => {
+                    p5Canvas = p.createCanvas(500, 500);
+                    p5Canvas.parent('p5-container');
+
+                    numMuestras = 512;
+                    valSuave1 = new Array(numMuestras).fill(0);
+                    valSuave2 = new Array(numMuestras).fill(0);
+
+                    p.getAudioContext().suspend();
+
+                    // Replace with your audio URL
+                    miCancion = p.loadSound(
+                        'cha.mp3',
+                        () => {
+                            console.log('Audio loaded. Duration:', miCancion.duration());
+                            audioLoaded = true;
+
+                            miAmplitud = new p5.Amplitude();
+                            miAmplitud.setInput(miCancion);
+
+                            miOnda = new p5.FFT(0.8, numMuestras);
+                            miOnda.setInput(miCancion);
+
+                            centerGif.classList.add('visible');
+                        },
+                        (err) => {
+                            console.error('Error loading audio:', err);
+                        }
+                    );
+
+                    p.background(255);
+                };
+
+                p.draw = () => {
+                    if (!audioLoaded) {
+                        p.background(255);
+                        p.fill(0);
+                        p.textAlign(p.CENTER, p.CENTER);
+                        p.textSize(14);
+                        p.text('Loading audio...', p.width / 2, p.height / 2);
+                        return;
+                    }
+
+                    // Start audio when user has clicked and audio is loaded
+                    if (audioStarted && !miCancion.isPlaying()) {
+                        p.userStartAudio().then(() => {
+                            miCancion.play();
+                            console.log('Audio started!');
+                        });
+                        audioStarted = false; // Only try once
+                    }
+
+                    // Safety check
+                    if (!miOnda) {
+                        p.background(255);
+                        return;
+                    }
+
+                    let miVol = p.map(p.mouseY, p.height, 0, 0.0, 1.0);
+                    miCancion.setVolume(miVol);
+
+                    let waveform = miOnda.waveform();
+                    let currentTime = miCancion.currentTime();
+
+                    if (currentTime < 100) {
+                        p.fill(255, 20);
+                        p.noStroke();
+                        p.rect(0, 0, p.width, p.height);
+
+                        p.push();
+                        p.translate(p.width / 2, p.height / 2);
+                        for (let i = 0; i < numMuestras; i++) {
+                            valSuave1[i] = valSuave1[i] + (waveform[i] - valSuave1[i]) / 1;
+                            let posY = p.map(valSuave1[i], -1.0, 1.0, 0, p.height / 2);
+
+                            p.push();
+                            p.rotate(p.radians(i));
+                            p.strokeWeight(2);
+                            p.stroke(100, 0, 200);
+                            p.point(0, posY);
+                            p.pop();
+                        }
+                        p.pop();
+
+                        p.push();
+                        p.translate(p.width / 2, p.height / 2);
+                        for (let i = 0; i < numMuestras; i++) {
+                            valSuave2[i] = valSuave2[i] + (waveform[i] - valSuave2[i]) / 8;
+                            let posY = p.map(valSuave2[i], -1.0, 1.0, 0, p.height / 2);
+
+                            p.push();
+                            p.rotate(p.radians(i));
+                            p.strokeWeight(3);
+                            p.stroke(200, 0, 100);
+                            p.point(0, posY);
+                            p.pop();
+                        }
+                        p.pop();
+                    }
+
+                    if (currentTime > 100) {
+                        let vol = miAmplitud.getLevel();
+                        ampSuave = ampSuave + (vol - ampSuave) / 24;
+
+                        let tamano1 = p.map(vol, 0.0, 1.0, 0, p.height);
+                        p.noFill();
+                        p.stroke(200, 0, 100);
+                        p.ellipse(p.width / 2, p.height / 2, tamano1, tamano1);
+
+                        let tamano2 = p.map(ampSuave, 0.0, 1.0, 0, p.height);
+                        p.stroke(100, 0, 200);
+                        p.ellipse(p.width / 2, p.height / 2, tamano2, tamano2);
+                    }
+                };
+
+                p.mouseReleased = () => {
+                    if (!audioLoaded) {
+                        p.getAudioContext().resume();
+                        return;
+                    }
+
+                    if (miCancion.isPlaying()) {
+                        //miCancion.pause();
+                    } else {
+                        miCancion.play();
+                    }
+                };
+            };
+
+            new p5(sketch);
+        }
+
+        // Initialize the audio visualizer after the page loads
+        window.addEventListener('load', () => {
+            initAudioVisualizer();
+        });
     </script>
 </body>
 
